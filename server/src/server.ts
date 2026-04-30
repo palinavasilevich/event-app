@@ -1,18 +1,37 @@
 import fastify from "fastify";
 import fastifyJwt from "@fastify/jwt";
+import cors from "@fastify/cors";
 import "dotenv/config";
 import "reflect-metadata";
+import { validateEnv, env } from "@/config/env";
+import { AppDataSource } from "./db/data-source";
 
 const app = fastify({ logger: true });
 
-const PORT = 3000;
-const HOST = "0.0.0.0";
-
 async function start() {
   try {
-    await app.listen({ port: PORT, host: HOST });
-    app.log.info(`Server running on PORT ${PORT}`);
+    validateEnv();
+
+    await app.register(cors, {
+      origin: true,
+      methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+      allowedHeaders: ["Content-Type", "Authorization"],
+    });
+
+    await app.register(fastifyJwt, {
+      secret: env.jwtSecret,
+    });
+
+    await AppDataSource.initialize();
+    app.log.info("Database connected");
+
+    await app.listen({ port: env.port, host: env.host });
+    app.log.info(`Server running on PORT ${env.port}`);
   } catch (err) {
+    if (AppDataSource.isInitialized) {
+      await AppDataSource.destroy();
+    }
+
     app.log.error(err);
     process.exit(1);
   }
