@@ -2,7 +2,7 @@ import { FastifyPluginAsync } from "fastify";
 import argon2 from "argon2";
 import { AppDataSource } from "@/db/data-source";
 import { User } from "@/db/entities/user.entity";
-import { registerSchema } from "./auth.schemas";
+import { loginSchema, registerSchema } from "./auth.schemas";
 
 export const authRoutes: FastifyPluginAsync = async (app) => {
   const userRepository = AppDataSource.getRepository(User);
@@ -49,6 +49,44 @@ export const authRoutes: FastifyPluginAsync = async (app) => {
         id: savedUser.id,
         email: savedUser.email,
         name: savedUser.name,
+      },
+    });
+  });
+
+  app.post("/login", async (request, reply) => {
+    const parseBody = loginSchema.safeParse(request.body);
+
+    if (!parseBody.success) {
+      return reply.code(400).send({
+        message: "Validation error",
+        errors: parseBody.error.issues.map((issue) => ({
+          path: issue.path.join("."),
+          message: issue.message,
+        })),
+      });
+    }
+
+    const { email, password } = parseBody.data;
+    const user = await userRepository.findOne({ where: { email } });
+
+    if (!user) {
+      return reply.code(401).send({ message: "Incorrect login or password" });
+    }
+
+    const isPasswordValid = await argon2.verify(user.passwordHash, password);
+
+    if (!isPasswordValid) {
+      return reply.code(401).send({ message: "Incorrect login or password" });
+    }
+
+    const token = await reply.jwtSign({ sub: user.id, email: user.email });
+
+    return reply.send({
+      token,
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
       },
     });
   });
