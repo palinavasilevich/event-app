@@ -2,6 +2,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
@@ -22,8 +23,10 @@ export class User {
   @Column({ type: "varchar", length: 100 })
   name!: string;
 
+  @OneToMany(() => Event, (event) => event.owner)
   events!: Event;
 
+  @OneToMany(() => EventParticipant, (participant) => participant.user)
   eventParticipants!: EventParticipant[];
 
   @CreateDateColumn({ type: "timestamptz" })
