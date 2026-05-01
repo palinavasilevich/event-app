@@ -42,7 +42,7 @@ export class Event {
   participants!: EventParticipant[];
 
   @CreateDateColumn({ type: "timestamptz" })
-  createAt!: Date;
+  createdAt!: Date;
 
   @UpdateDateColumn({ type: "timestamptz" })
   updatedAt!: Date;
