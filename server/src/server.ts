@@ -5,7 +5,8 @@ import "dotenv/config";
 import "reflect-metadata";
 import { validateEnv, env } from "@/config/env";
 import { AppDataSource } from "./db/data-source";
-import { authRoutes } from "./modules/auth/auth.route";
+import { authRoutes } from "./modules/auth/auth.routes";
+import { EventRoutes } from "./modules/events/event.routes";
 
 const app = fastify({ logger: true });
 
@@ -32,6 +33,7 @@ async function start() {
     });
 
     await app.register(authRoutes, { prefix: "/auth" });
+    await app.register(EventRoutes, { prefix: "/event" });
 
     await AppDataSource.initialize();
     app.log.info("Database connected");

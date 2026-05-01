@@ -8,19 +8,19 @@ export const authRoutes: FastifyPluginAsync = async (app) => {
   const userRepository = AppDataSource.getRepository(User);
 
   app.post("/register", async (request, reply) => {
-    const parseBody = registerSchema.safeParse(request.body);
+    const parsedBody = registerSchema.safeParse(request.body);
 
-    if (!parseBody.success) {
+    if (!parsedBody.success) {
       return reply.code(400).send({
         message: "Validation error",
-        errors: parseBody.error.issues.map((issue) => ({
+        errors: parsedBody.error.issues.map((issue) => ({
           path: issue.path.join("."),
           message: issue.message,
         })),
       });
     }
 
-    const { email, password, name } = parseBody.data;
+    const { email, password, name } = parsedBody.data;
 
     const existingUser = await userRepository.findOne({ where: { email } });
 
@@ -54,19 +54,19 @@ export const authRoutes: FastifyPluginAsync = async (app) => {
   });
 
   app.post("/login", async (request, reply) => {
-    const parseBody = loginSchema.safeParse(request.body);
+    const parsedBody = loginSchema.safeParse(request.body);
 
-    if (!parseBody.success) {
+    if (!parsedBody.success) {
       return reply.code(400).send({
         message: "Validation error",
-        errors: parseBody.error.issues.map((issue) => ({
+        errors: parsedBody.error.issues.map((issue) => ({
           path: issue.path.join("."),
           message: issue.message,
         })),
       });
     }
 
-    const { email, password } = parseBody.data;
+    const { email, password } = parsedBody.data;
     const user = await userRepository.findOne({ where: { email } });
 
     if (!user) {
