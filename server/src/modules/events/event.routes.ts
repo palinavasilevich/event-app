@@ -4,6 +4,8 @@ import { Event as EventEntity } from "@/db/entities/event.entity";
 import { EventParticipant } from "@/db/entities/event-participant.entity";
 import { createEventSchema } from "./event.schema";
 
+type EventParams = { id: string };
+
 export const EventRoutes: FastifyPluginAsync = async (app) => {
   const eventRepository = AppDataSource.getRepository(EventEntity);
   const participantsRepository = AppDataSource.getRepository(EventParticipant);
@@ -37,4 +39,26 @@ export const EventRoutes: FastifyPluginAsync = async (app) => {
 
     return reply.code(201).send(savedEvent);
   });
+
+  app.get("/", { preHandler: [app.authenticate] }, async () => {
+    return eventRepository.find({
+      order: { startedAt: "ASC" },
+    });
+  });
+
+  app.get<{ Params: EventParams }>(
+    "/:id",
+    { preHandler: [app.authenticate] },
+    async (request, reply) => {
+      const event = await eventRepository.findOne({
+        where: { id: request.params.id },
+      });
+
+      if (!event) {
+        return reply.code(404).send({ message: "Event not found" });
+      }
+
+      return reply.send(event);
+    },
+  );
 };
