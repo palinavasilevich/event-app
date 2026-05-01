@@ -122,4 +122,59 @@ export const EventRoutes: FastifyPluginAsync = async (app) => {
       return reply.code(204).send();
     },
   );
+
+  app.post<{ Params: EventParams }>(
+    "/:id/join",
+    { preHandler: [app.authenticate] },
+    async (request, reply) => {
+      const event = await eventRepository.findOne({
+        where: { id: request.params.id },
+      });
+
+      if (!event) {
+        return reply.code(404).send({ message: "Event not found" });
+      }
+
+      if (event.ownerId === request.user.sub) {
+        return reply.code(400).send({
+          message: "You cannot join your event",
+        });
+      }
+
+      const existingParticipation = await participantsRepository.findOne({
+        where: { eventId: event.id, userId: request.user.sub },
+      });
+
+      if (existingParticipation) {
+        return reply.code(409).send({
+          message: "You have already joined this event",
+        });
+      }
+
+      const participationCount = await participantsRepository.count({
+        where: { eventId: event.id },
+      });
+
+      if (participationCount >= event.capacity) {
+        return reply.code(409).send({
+          message: "There are currently no available seats for this event",
+        });
+      }
+
+      const participation = participantsRepository.create({
+        eventId: event.id,
+        userId: request.user.sub,
+      });
+
+      const savedParticipation =
+        await participantsRepository.save(participation);
+
+      return reply
+        .code(201)
+        .send({
+          participation: savedParticipation,
+          message: "You have successfully joined the event",
+        });
+    },
+  );
 };
