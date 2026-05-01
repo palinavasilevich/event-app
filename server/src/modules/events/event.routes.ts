@@ -76,7 +76,7 @@ export const EventRoutes: FastifyPluginAsync = async (app) => {
 
       if (event.ownerId !== request.user.sub) {
         return reply.code(403).send({
-          message: "Only the event owner can edit",
+          message: "Only the owner of an event can edit it",
         });
       }
 
@@ -96,6 +96,30 @@ export const EventRoutes: FastifyPluginAsync = async (app) => {
 
       const updatedEvent = await eventRepository.save(event);
       return reply.send(updatedEvent);
+    },
+  );
+
+  app.delete<{ Params: EventParams }>(
+    "/:id",
+    { preHandler: [app.authenticate] },
+    async (request, reply) => {
+      const event = await eventRepository.findOne({
+        where: { id: request.params.id },
+      });
+
+      if (!event) {
+        return reply.code(404).send({ message: "Event not found" });
+      }
+
+      if (event.ownerId !== request.user.sub) {
+        return reply.code(403).send({
+          message: "Only the owner of an event can delete it",
+        });
+      }
+
+      await eventRepository.delete({ id: event.id });
+
+      return reply.code(204).send();
     },
   );
 };
