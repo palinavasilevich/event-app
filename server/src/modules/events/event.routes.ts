@@ -95,7 +95,10 @@ export const EventRoutes: FastifyPluginAsync = async (app) => {
       Object.assign(event, parsedBody.data);
 
       const updatedEvent = await eventRepository.save(event);
-      return reply.send(updatedEvent);
+      return reply.send({
+        event: updatedEvent,
+        message: "You have successfully edited the event",
+      });
     },
   );
 
@@ -119,7 +122,9 @@ export const EventRoutes: FastifyPluginAsync = async (app) => {
 
       await eventRepository.delete({ id: event.id });
 
-      return reply.code(204).send();
+      return reply
+        .code(204)
+        .send({ message: "You have successfully deleted the event" });
     },
   );
 
@@ -169,12 +174,43 @@ export const EventRoutes: FastifyPluginAsync = async (app) => {
       const savedParticipation =
         await participantsRepository.save(participation);
 
-      return reply
-        .code(201)
-        .send({
-          participation: savedParticipation,
-          message: "You have successfully joined the event",
+      return reply.code(201).send({
+        participation: savedParticipation,
+        message: "You have successfully joined the event",
+      });
+    },
+  );
+
+  app.delete<{ Params: EventParams }>(
+    "/:id/join",
+    { preHandler: [app.authenticate] },
+    async (request, reply) => {
+      const event = await eventRepository.findOne({
+        where: { id: request.params.id },
+      });
+
+      if (!event) {
+        return reply.code(404).send({ message: "Event not found" });
+      }
+
+      const existingParticipation = await participantsRepository.findOne({
+        where: { eventId: event.id, userId: request.user.sub },
+      });
+
+      if (!existingParticipation) {
+        return reply.code(409).send({
+          message: "You have not joined this event yet",
         });
+      }
+
+      await participantsRepository.delete({
+        id: existingParticipation.id,
+      });
+
+      return reply.code(204).send({
+        message:
+          "You have successfully cancelled your participation in the event",
+      });
     },
   );
 };
