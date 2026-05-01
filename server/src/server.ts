@@ -6,7 +6,8 @@ import "reflect-metadata";
 import { validateEnv, env } from "@/config/env";
 import { AppDataSource } from "./db/data-source";
 import { authRoutes } from "./modules/auth/auth.routes";
-import { EventRoutes } from "./modules/events/event.routes";
+import { eventRoutes } from "./modules/events/event.routes";
+import { meRoutes } from "./modules/me/me.routes";
 
 const app = fastify({ logger: true });
 
@@ -33,7 +34,8 @@ async function start() {
     });
 
     await app.register(authRoutes, { prefix: "/auth" });
-    await app.register(EventRoutes, { prefix: "/event" });
+    await app.register(eventRoutes, { prefix: "/event" });
+    await app.register(meRoutes, { prefix: "/me" });
 
     await AppDataSource.initialize();
     app.log.info("Database connected");

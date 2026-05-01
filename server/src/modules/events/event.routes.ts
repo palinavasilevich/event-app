@@ -6,7 +6,7 @@ import { createEventSchema, updateEventSchema } from "./event.schema";
 
 type EventParams = { id: string };
 
-export const EventRoutes: FastifyPluginAsync = async (app) => {
+export const eventRoutes: FastifyPluginAsync = async (app) => {
   const eventRepository = AppDataSource.getRepository(EventEntity);
   const participantsRepository = AppDataSource.getRepository(EventParticipant);
 
