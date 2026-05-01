@@ -23,6 +23,6 @@ export const updateEventSchema = z
     address: z.string().trim().min(1).max(255).optional(),
     startedAt: startedAtSchema.optional(),
   })
-  .refine((data) => Object.keys(data).length > 0, {
+  .refine((data) => Object.values(data).some((v) => v !== undefined), {
     message: "Please provide at least one editable field",
   });

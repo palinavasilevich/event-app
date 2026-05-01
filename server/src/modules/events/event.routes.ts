@@ -92,28 +92,7 @@ export const EventRoutes: FastifyPluginAsync = async (app) => {
         });
       }
 
-      const { title, description, capacity, address, startedAt } =
-        parsedBody.data;
-
-      if (title !== undefined) {
-        event.title = title;
-      }
-
-      if (description !== undefined) {
-        event.description = description;
-      }
-
-      if (capacity !== undefined) {
-        event.capacity = capacity;
-      }
-
-      if (address !== undefined) {
-        event.address = address;
-      }
-
-      if (startedAt !== undefined) {
-        event.startedAt = startedAt;
-      }
+      Object.assign(event, parsedBody.data);
 
       const updatedEvent = await eventRepository.save(event);
       return reply.send(updatedEvent);
