@@ -74,8 +74,43 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       throw error;
     }
   },
-  register: async () => {},
-  logout: () => {},
-  clearAuthError: () => {},
-  fetchMe: async () => {},
+  register: async (payload) => {
+    set({ isAuthLoading: true, authError: null });
+
+    try {
+      const { token, user } = await authApi.register(payload);
+      setAuthToken(token);
+      set({ user, isAuthLoading: false });
+    } catch (error) {
+      console.error(error);
+      set({
+        isAuthLoading: false,
+        authError: getApiErrorMessage(error, "Failed to register"),
+      });
+
+      throw error;
+    }
+  },
+  logout: () => {
+    setAuthToken(null);
+    set({ user: null, authError: null });
+  },
+  clearAuthError: () => {
+    set({ authError: null });
+  },
+  fetchMe: async () => {
+    if (!getAuthToken()) {
+      set({ user: null });
+      return;
+    }
+
+    try {
+      const profile = await authApi.me();
+      set({ user: profileToUser(profile) });
+    } catch (error) {
+      console.error(error);
+      setAuthToken(null);
+      set({ user: null });
+    }
+  },
 }));
