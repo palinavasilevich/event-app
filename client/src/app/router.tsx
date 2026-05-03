@@ -12,11 +12,45 @@ export const appRouter = createBrowserRouter([
       { index: true, element: <RootRedirect /> },
       {
         element: <GuestRoute />,
-        children: [],
+        children: [
+          {
+            path: "login",
+            element: <h1>LOGIN</h1>,
+          },
+          {
+            path: "register",
+            element: <h1>REGISTER</h1>,
+          },
+        ],
       },
       {
         element: <ProtectedRoute />,
-        children: [],
+        children: [
+          {
+            path: "events",
+            element: <h1>EVENTS</h1>,
+          },
+
+          {
+            path: "events/my",
+            element: <h1>MY EVENTS</h1>,
+          },
+
+          {
+            path: "events/new",
+            element: <h1>NEW EVENT</h1>,
+          },
+
+          {
+            path: "events/:id",
+            element: <h1>EVENT BY ID</h1>,
+          },
+
+          {
+            path: "events/:id/edit",
+            element: <h1>EDIT EVENT</h1>,
+          },
+        ],
       },
       { path: "*", element: <Navigate to="/" replace /> },
     ],
