@@ -24,3 +24,13 @@ export type AuthResponse = {
   token: string;
   user: UserPublic;
 };
+
+export type ApiFieldError = {
+  path: string;
+  message: string;
+};
+
+export type ApiErrorResponse = {
+  message: string;
+  errors?: ApiFieldError[];
+};
