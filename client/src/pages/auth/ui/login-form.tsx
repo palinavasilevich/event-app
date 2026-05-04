@@ -15,45 +15,29 @@ import { AuthFormErrorAlert } from "./auth-form-error-alert";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-const registerFormSchema = z
-  .object({
-    name: z
-      .string()
-      .trim()
-      .min(1, { error: "Name is required" })
-      .min(2, { error: "Name must be at least 2 characters long" })
-      .max(100),
-    email: z.email().trim().min(1, { error: "Email is required" }),
-    password: z
-      .string()
-      .min(1, { error: "Password is required" })
-      .min(8, { error: "Password must be at least 8 characters" }),
-    confirmPassword: z
-      .string()
-      .min(1, { error: "Please confirm your password" }),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    path: ["confirmPassword"],
-    error: "The passwords do not match",
-  });
+const loginFormSchema = z.object({
+  email: z.email().trim().min(1, { error: "Email is required" }),
+  password: z
+    .string()
+    .min(1, { error: "Password is required" })
+    .min(8, { error: "Password must be at least 8 characters" }),
+});
 
-export function RegisterForm() {
+export function LoginForm() {
   const isAuthLoading = useAuthStore((state) => state.isAuthLoading);
   const authError = useAuthStore((state) => state.authError);
-  const register = useAuthStore((state) => state.register);
+  const login = useAuthStore((state) => state.login);
 
-  const form = useForm<z.infer<typeof registerFormSchema>>({
-    resolver: zodResolver(registerFormSchema),
+  const form = useForm<z.infer<typeof loginFormSchema>>({
+    resolver: zodResolver(loginFormSchema),
     defaultValues: {
-      name: "",
       email: "",
       password: "",
-      confirmPassword: "",
     },
   });
 
-  const onSubmit = form.handleSubmit(async ({ email, password, name }) => {
-    await register({ email, password, name });
+  const onSubmit = form.handleSubmit(async ({ email, password }) => {
+    await login({ email, password });
   });
 
   const resetErrors = () => {
@@ -63,32 +47,12 @@ export function RegisterForm() {
   return (
     <div className="flex w-full max-w-sm flex-col gap-6">
       <AuthFormCard
-        title="Sign Up"
-        description="Create an account to get started"
+        title="Sign In"
+        description="Enter your email and password to login"
       >
         <form onSubmit={onSubmit}>
           <FieldGroup>
             <AuthFormErrorAlert message={authError} />
-            <Controller
-              name="name"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="register-name">Name</FieldLabel>
-                  <Input
-                    {...field}
-                    id="register-name"
-                    aria-invalid={fieldState.invalid}
-                    placeholder="Enter your name"
-                    autoComplete="name"
-                    disabled={isAuthLoading}
-                  />
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
 
             <Controller
               name="email"
@@ -133,40 +97,18 @@ export function RegisterForm() {
               )}
             />
 
-            <Controller
-              name="confirmPassword"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="register-confirm-password">
-                    Confirm password
-                  </FieldLabel>
-                  <Input
-                    {...field}
-                    id="register-confirm-password"
-                    aria-invalid={fieldState.invalid}
-                    type="password"
-                    disabled={isAuthLoading}
-                  />
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
-
             <Field>
               <Button type="submit" className="w-full" disabled={isAuthLoading}>
-                {isAuthLoading ? "Sending..." : "Sign Up"}
+                {isAuthLoading ? "Sending..." : "Sign in"}
               </Button>
               <FieldDescription className="text-center">
-                Do you already have an account?{" "}
+                Don't have an account yet?{" "}
                 <Link
                   className="underline-offset-4 hover:underline hover:text-chart-5"
-                  to="/login"
+                  to="/register"
                   onClick={resetErrors}
                 >
-                  Sign In
+                  Sign Up
                 </Link>
               </FieldDescription>
             </Field>

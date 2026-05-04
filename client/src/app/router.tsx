@@ -4,6 +4,7 @@ import { RootRedirect } from "./router/root-redirect";
 import { GuestRoute } from "./router/guest-route";
 import { ProtectedRoute } from "./router/protected-route";
 import { AuthRegisterPage } from "@/pages/auth/register/page";
+import { AuthLoginPage } from "@/pages/auth/login/page";
 
 export const appRouter = createBrowserRouter([
   {
@@ -16,7 +17,7 @@ export const appRouter = createBrowserRouter([
         children: [
           {
             path: "login",
-            element: <h1>LOGIN</h1>,
+            element: <AuthLoginPage />,
           },
           {
             path: "register",
