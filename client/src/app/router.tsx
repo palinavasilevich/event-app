@@ -3,6 +3,7 @@ import { RootLayout } from "./router/root-layout";
 import { RootRedirect } from "./router/root-redirect";
 import { GuestRoute } from "./router/guest-route";
 import { ProtectedRoute } from "./router/protected-route";
+import { AuthRegisterPage } from "@/pages/auth/register/page";
 
 export const appRouter = createBrowserRouter([
   {
@@ -19,7 +20,7 @@ export const appRouter = createBrowserRouter([
           },
           {
             path: "register",
-            element: <h1>REGISTER</h1>,
+            element: <AuthRegisterPage />,
           },
         ],
       },
