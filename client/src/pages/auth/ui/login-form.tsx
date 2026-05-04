@@ -17,9 +17,7 @@ import { Button } from "@/components/ui/button";
 
 const loginFormSchema = z.object({
   email: z.email().trim().min(1, { error: "Email is required" }),
-  password: z
-    .string()
-    .min(8, { error: "Password must be at least 8 characters" }),
+  password: z.string().min(1, { error: "Password is required" }),
 });
 
 export function LoginForm() {
