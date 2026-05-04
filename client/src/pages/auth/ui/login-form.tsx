@@ -19,7 +19,6 @@ const loginFormSchema = z.object({
   email: z.email().trim().min(1, { error: "Email is required" }),
   password: z
     .string()
-    .min(1, { error: "Password is required" })
     .min(8, { error: "Password must be at least 8 characters" }),
 });
 
@@ -27,6 +26,7 @@ export function LoginForm() {
   const isAuthLoading = useAuthStore((state) => state.isAuthLoading);
   const authError = useAuthStore((state) => state.authError);
   const login = useAuthStore((state) => state.login);
+  const clearAuthError = useAuthStore((state) => state.clearAuthError);
 
   const form = useForm<z.infer<typeof loginFormSchema>>({
     resolver: zodResolver(loginFormSchema),
@@ -39,10 +39,6 @@ export function LoginForm() {
   const onSubmit = form.handleSubmit(async ({ email, password }) => {
     await login({ email, password });
   });
-
-  const resetErrors = () => {
-    useAuthStore.getState().clearAuthError();
-  };
 
   return (
     <div className="flex w-full max-w-sm flex-col gap-6">
@@ -59,10 +55,10 @@ export function LoginForm() {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="register-email">Email</FieldLabel>
+                  <FieldLabel htmlFor="login-email">Email</FieldLabel>
                   <Input
                     {...field}
-                    id="register-email"
+                    id="login-email"
                     aria-invalid={fieldState.invalid}
                     type="email"
                     placeholder="example@example.com"
@@ -81,13 +77,14 @@ export function LoginForm() {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="register-password">Password</FieldLabel>
+                  <FieldLabel htmlFor="login-password">Password</FieldLabel>
                   <Input
                     {...field}
-                    id="register-password"
+                    id="login-password"
                     aria-invalid={fieldState.invalid}
                     type="password"
                     placeholder="********"
+                    autoComplete="current-password"
                     disabled={isAuthLoading}
                   />
                   {fieldState.invalid && (
@@ -106,7 +103,7 @@ export function LoginForm() {
                 <Link
                   className="underline-offset-4 hover:underline hover:text-chart-5"
                   to="/register"
-                  onClick={resetErrors}
+                  onClick={clearAuthError}
                 >
                   Sign Up
                 </Link>

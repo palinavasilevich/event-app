@@ -6,6 +6,7 @@ import type {
 } from "@/shared/api/types";
 import { getAuthToken, setAuthToken } from "@/shared/api/auth-token";
 import { authApi } from "@/shared/api/auth-api";
+import { isAxiosError } from "@/shared/api/http";
 import { getApiErrorMessage } from "@/lib/getApiErrorMessage";
 
 type AuthState = {
@@ -20,14 +21,6 @@ type AuthState = {
   clearAuthError: () => void;
   fetchMe: () => Promise<void>;
 };
-
-function profileToUser(profile: {
-  id: string;
-  email: string;
-  name: string;
-}): UserPublic {
-  return { id: profile.id, email: profile.email, name: profile.name };
-}
 
 export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
@@ -45,15 +38,17 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         return;
       }
 
-      const profile = await authApi.me();
+      const { id, email, name } = await authApi.me();
       set({
-        user: profileToUser(profile),
+        user: { id, email, name },
         isBootstrapped: true,
         isAuthLoading: false,
       });
     } catch (error) {
       console.error(error);
-      setAuthToken(null);
+      if (isAxiosError(error) && error.response?.status === 401) {
+        setAuthToken(null);
+      }
       set({ user: null, isBootstrapped: true, isAuthLoading: false });
     }
   },
@@ -70,8 +65,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         isAuthLoading: false,
         authError: getApiErrorMessage(error, "Failed to log in"),
       });
-
-      throw error;
     }
   },
   register: async (payload) => {
@@ -87,8 +80,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         isAuthLoading: false,
         authError: getApiErrorMessage(error, "Failed to register"),
       });
-
-      throw error;
     }
   },
   logout: () => {
@@ -105,8 +96,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     }
 
     try {
-      const profile = await authApi.me();
-      set({ user: profileToUser(profile) });
+      const { id, email, name } = await authApi.me();
+      set({ user: { id, email, name } });
     } catch (error) {
       console.error(error);
       setAuthToken(null);

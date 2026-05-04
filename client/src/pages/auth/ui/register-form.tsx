@@ -22,11 +22,10 @@ const registerFormSchema = z
       .trim()
       .min(1, { error: "Name is required" })
       .min(2, { error: "Name must be at least 2 characters long" })
-      .max(100),
+      .max(100, { error: "Name must be at most 100 characters" }),
     email: z.email().trim().min(1, { error: "Email is required" }),
     password: z
       .string()
-      .min(1, { error: "Password is required" })
       .min(8, { error: "Password must be at least 8 characters" }),
     confirmPassword: z
       .string()
@@ -41,6 +40,7 @@ export function RegisterForm() {
   const isAuthLoading = useAuthStore((state) => state.isAuthLoading);
   const authError = useAuthStore((state) => state.authError);
   const register = useAuthStore((state) => state.register);
+  const clearAuthError = useAuthStore((state) => state.clearAuthError);
 
   const form = useForm<z.infer<typeof registerFormSchema>>({
     resolver: zodResolver(registerFormSchema),
@@ -55,10 +55,6 @@ export function RegisterForm() {
   const onSubmit = form.handleSubmit(async ({ email, password, name }) => {
     await register({ email, password, name });
   });
-
-  const resetErrors = () => {
-    useAuthStore.getState().clearAuthError();
-  };
 
   return (
     <div className="flex w-full max-w-sm flex-col gap-6">
@@ -124,6 +120,7 @@ export function RegisterForm() {
                     aria-invalid={fieldState.invalid}
                     type="password"
                     placeholder="********"
+                    autoComplete="new-password"
                     disabled={isAuthLoading}
                   />
                   {fieldState.invalid && (
@@ -146,6 +143,7 @@ export function RegisterForm() {
                     id="register-confirm-password"
                     aria-invalid={fieldState.invalid}
                     type="password"
+                    autoComplete="new-password"
                     disabled={isAuthLoading}
                   />
                   {fieldState.invalid && (
@@ -164,7 +162,7 @@ export function RegisterForm() {
                 <Link
                   className="underline-offset-4 hover:underline hover:text-chart-5"
                   to="/login"
-                  onClick={resetErrors}
+                  onClick={clearAuthError}
                 >
                   Sign In
                 </Link>
