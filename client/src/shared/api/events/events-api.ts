@@ -1,0 +1,39 @@
+import { http } from "../http";
+import type {
+  CreateEventRequest,
+  EventDto,
+  JoinEventResponse,
+  UpdateEventRequest,
+} from "./types";
+
+export const eventsApi = {
+  async getAllEvents(): Promise<EventDto[]> {
+    const { data } = await http.get<EventDto[]>("/events");
+    return data;
+  },
+  async getEventById(id: string): Promise<EventDto> {
+    const { data } = await http.get<EventDto>(`/events/${id}`);
+    return data;
+  },
+  async createNewEvent(payload: CreateEventRequest): Promise<EventDto> {
+    const { data } = await http.post<EventDto>("events", payload);
+    return data;
+  },
+  async updateEvent(
+    id: string,
+    payload: UpdateEventRequest,
+  ): Promise<EventDto> {
+    const { data } = await http.patch<EventDto>(`/events/${id}`, payload);
+    return data;
+  },
+  async removeEvent(id: string): Promise<void> {
+    await http.delete(`/events/${id}`);
+  },
+  async joinEvent(id: string): Promise<JoinEventResponse> {
+    const { data } = await http.post<JoinEventResponse>(`/events/${id}/join`);
+    return data;
+  },
+  async leaveEvent(id: string): Promise<void> {
+    await http.delete(`/events/${id}/join`);
+  },
+};

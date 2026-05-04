@@ -34,7 +34,7 @@ async function start() {
     });
 
     await app.register(authRoutes, { prefix: "/auth" });
-    await app.register(eventRoutes, { prefix: "/event" });
+    await app.register(eventRoutes, { prefix: "/events" });
     await app.register(meRoutes, { prefix: "/me" });
 
     await AppDataSource.initialize();

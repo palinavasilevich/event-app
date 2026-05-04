@@ -1,5 +1,5 @@
 import { isAxiosError } from "@/shared/api/http";
-import type { ApiErrorResponse } from "@/shared/api/types";
+import type { ApiErrorResponse } from "@/shared/api/auth/types";
 
 export function getApiErrorMessage(
   error: unknown,

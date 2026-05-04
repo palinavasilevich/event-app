@@ -3,9 +3,9 @@ import type {
   AuthLoginRequest,
   AuthRegisterRequest,
   UserPublic,
-} from "@/shared/api/types";
+} from "@/shared/api/auth/types";
 import { getAuthToken, setAuthToken } from "@/shared/api/auth-token";
-import { authApi } from "@/shared/api/auth-api";
+import { authApi } from "@/shared/api/auth/auth-api";
 import { isAxiosError } from "@/shared/api/http";
 import { getApiErrorMessage } from "@/lib/getApiErrorMessage";
 
