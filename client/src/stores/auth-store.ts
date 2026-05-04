@@ -6,7 +6,7 @@ import type {
 } from "@/shared/api/types";
 import { getAuthToken, setAuthToken } from "@/shared/api/auth-token";
 import { authApi } from "@/shared/api/auth-api";
-import { getApiErrorMessage } from "@/lib/utils";
+import { getApiErrorMessage } from "@/lib/getApiErrorMessage";
 
 type AuthState = {
   user: UserPublic | null;
