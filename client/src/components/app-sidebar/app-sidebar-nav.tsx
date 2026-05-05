@@ -11,7 +11,7 @@ export function AppSidebarNav() {
       label: "Create event",
       icon: PlusIcon,
       isActive: (path: string) => path === "/events/new",
-      className: "min-h-12 bg-primary py-3 text-primary-foreground",
+      className: "mt-3 bg-primary py-3 text-primary-foreground",
     },
     {
       to: "/events",

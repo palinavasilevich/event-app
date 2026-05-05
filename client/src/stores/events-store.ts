@@ -3,9 +3,10 @@ import { eventsApi } from "@/shared/api/events/events-api";
 import type {
   CreateEventRequest,
   EventDto,
-  JoinedEventItem,
   UpdateEventRequest,
 } from "@/shared/api/events/types";
+import { meApi } from "@/shared/api/me/me-api";
+import type { JoinedEventItem } from "@/shared/api/me/types";
 import { create } from "zustand";
 
 export type MyEventsFilter = "created" | "joined";
@@ -126,7 +127,56 @@ export const useEventsStore = create<EventsState>((set, get) => ({
       throw error;
     }
   },
-  loadJoinedEvents: async () => {},
-  joinEvent: async (id) => {},
-  leaveEvent: async (id) => {},
+  loadJoinedEvents: async () => {
+    set({ isJoinedLoading: true, eventsError: null });
+
+    try {
+      const joinedEvents = await meApi.getJoinedEvents();
+      set({ joinedEvents, isJoinedLoading: false });
+    } catch (error) {
+      set({
+        isJoinedLoading: false,
+        eventsError: getApiErrorMessage(error, "Failed to load joined events"),
+      });
+      throw error;
+    }
+  },
+  joinEvent: async (id) => {
+    set({ isMutationLoading: true, eventsError: null });
+
+    try {
+      await eventsApi.joinEvent(id);
+      await get().loadJoinedEvents();
+
+      set({ isMutationLoading: false });
+    } catch (error) {
+      set({
+        isMutationLoading: false,
+        eventsError: getApiErrorMessage(error, "Failed to join to event"),
+      });
+
+      throw error;
+    }
+  },
+  leaveEvent: async (id) => {
+    set({ isMutationLoading: true, eventsError: null });
+
+    try {
+      await eventsApi.leaveEvent(id);
+
+      set((state) => ({
+        joinedEvents: state.joinedEvents.filter(
+          (joinedEvent) => joinedEvent.event.id !== id,
+        ),
+        mutationLoading: false,
+      }));
+    } catch (error) {
+      set({
+        isMutationLoading: false,
+        eventsError: getApiErrorMessage(error, "Failed to leave to event"),
+      });
+
+      throw error;
+    }
+  },
 }));
