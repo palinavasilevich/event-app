@@ -19,6 +19,7 @@ type EventsState = {
   isJoinedLoading: boolean;
   isMutationLoading: boolean;
   eventsError: string | null;
+  clearError: () => void;
   setMyEventsFilter: (filter: MyEventsFilter) => void;
   loadEvents: () => Promise<void>;
   createEvent: (payload: CreateEventRequest) => Promise<EventDto>;
@@ -37,6 +38,7 @@ export const useEventsStore = create<EventsState>((set, get) => ({
   isJoinedLoading: false,
   isMutationLoading: false,
   eventsError: null,
+  clearError: () => set({ eventsError: null }),
   setMyEventsFilter: (filter) => set({ myEventsFilter: filter }),
   loadEvents: async () => {
     set({ isEventsLoading: true, eventsError: null });
@@ -44,7 +46,6 @@ export const useEventsStore = create<EventsState>((set, get) => ({
     try {
       const events = await eventsApi.getAllEvents();
       set({ events, isEventsLoading: false });
-      set({});
     } catch (error) {
       set({
         isEventsLoading: false,
@@ -168,7 +169,7 @@ export const useEventsStore = create<EventsState>((set, get) => ({
         joinedEvents: state.joinedEvents.filter(
           (joinedEvent) => joinedEvent.event.id !== id,
         ),
-        mutationLoading: false,
+        isMutationLoading: false,
       }));
     } catch (error) {
       set({

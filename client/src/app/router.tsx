@@ -6,6 +6,7 @@ import { ProtectedRoute } from "./router/protected-route";
 import { AuthRegisterPage } from "@/pages/auth/register/page";
 import { AuthLoginPage } from "@/pages/auth/login/page";
 import { EventsAllPage } from "@/pages/events/all/page";
+import { CreateEventPage } from "@/pages/events/create/page";
 
 export const appRouter = createBrowserRouter([
   {
@@ -41,7 +42,7 @@ export const appRouter = createBrowserRouter([
 
           {
             path: "events/new",
-            element: <h1>NEW EVENT</h1>,
+            element: <CreateEventPage />,
           },
 
           {

@@ -26,7 +26,7 @@ export function EventsAllPage() {
         <p className="text-sm text-muted-foreground">No events yet</p>
       ) : null}
 
-      <ul className="mx-auto grid w-full max-w-7xl grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <ul className="grid w-full max-w-7xl grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         {events.map((event) => (
           <li key={event.id}>
             <EventListCard event={event} />

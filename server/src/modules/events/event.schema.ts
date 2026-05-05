@@ -3,7 +3,7 @@ import z from "zod";
 const startedAtSchema = z
   .string()
   .refine((value) => !Number.isNaN(new Date(value).getTime()), {
-    message: "startsAt must be a valid ISO date",
+    message: "startedAt must be a valid ISO date",
   })
   .transform((value) => new Date(value));
 
