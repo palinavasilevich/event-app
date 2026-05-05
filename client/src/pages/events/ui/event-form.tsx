@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils";
 import type { CreateEventRequest } from "@/shared/api/events/types";
 import { ArrowLeftIcon } from "lucide-react";
 import { Controller, type UseFormReturn } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 type EventFormValues = CreateEventRequest;
 
@@ -22,7 +22,7 @@ type EventFormProps = {
   subtitle: string;
   backTo: string;
   backLabel: string;
-  cancelTo: string;
+  onCancel: () => void;
   submitLabel: string;
   submittingLabel: string;
   form: UseFormReturn<EventFormValues>;
@@ -37,7 +37,7 @@ export function EventForm({
   subtitle,
   backTo,
   backLabel,
-  cancelTo,
+  onCancel,
   submitLabel,
   submittingLabel,
   form,
@@ -46,7 +46,6 @@ export function EventForm({
   className,
   onSubmit,
 }: EventFormProps) {
-  const navigate = useNavigate();
   return (
     <div className={cn("mx-auto w-full max-w-2xl space-y-6", className)}>
       <div className="space-y-1">
@@ -187,12 +186,7 @@ export function EventForm({
           </CardContent>
 
           <CardFooter className="justify-end gap-2 border-t">
-            <Button
-              variant="ghost"
-              type="button"
-              disabled={isLoading}
-              onClick={() => navigate(cancelTo)}
-            >
+            <Button variant="ghost" type="button" disabled={isLoading} onClick={onCancel}>
               Cancel
             </Button>
 

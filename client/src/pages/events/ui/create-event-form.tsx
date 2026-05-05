@@ -68,7 +68,7 @@ export function CreateEventForm({ className }: CreateEventFormProps) {
       subtitle="Fill in the event fields"
       backTo="/events"
       backLabel="Back"
-      cancelTo="/events"
+      onCancel={() => navigate("/events")}
       submitLabel="Create event"
       submittingLabel="Creating..."
       error={eventsError}
