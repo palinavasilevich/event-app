@@ -1,4 +1,4 @@
-import { getApiErrorMessage } from "@/lib/getApiErrorMessage";
+import { getApiErrorMessage } from "@/lib/get-api-error-message";
 import { eventsApi } from "@/shared/api/events/events-api";
 import type {
   CreateEventRequest,

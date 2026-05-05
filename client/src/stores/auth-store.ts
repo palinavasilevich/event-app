@@ -7,7 +7,7 @@ import type {
 import { getAuthToken, setAuthToken } from "@/shared/api/auth-token";
 import { authApi } from "@/shared/api/auth/auth-api";
 import { isAxiosError } from "@/shared/api/http";
-import { getApiErrorMessage } from "@/lib/getApiErrorMessage";
+import { getApiErrorMessage } from "@/lib/get-api-error-message";
 
 type AuthState = {
   user: UserPublic | null;

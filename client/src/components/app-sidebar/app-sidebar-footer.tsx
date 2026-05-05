@@ -2,7 +2,7 @@ import type { UserPublic } from "@/shared/api/auth/types";
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "../ui/sidebar";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { LogOutIcon } from "lucide-react";
-import { getUserInitials } from "@/lib/getUserInitials";
+import { getUserInitials } from "@/lib/get-user-initials";
 
 type AppSidebarFooterProps = {
   user: UserPublic;

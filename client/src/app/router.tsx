@@ -5,6 +5,7 @@ import { GuestRoute } from "./router/guest-route";
 import { ProtectedRoute } from "./router/protected-route";
 import { AuthRegisterPage } from "@/pages/auth/register/page";
 import { AuthLoginPage } from "@/pages/auth/login/page";
+import { EventsAllPage } from "@/pages/events/all/page";
 
 export const appRouter = createBrowserRouter([
   {
@@ -30,7 +31,7 @@ export const appRouter = createBrowserRouter([
         children: [
           {
             path: "events",
-            element: <h1>EVENTS</h1>,
+            element: <EventsAllPage />,
           },
 
           {
