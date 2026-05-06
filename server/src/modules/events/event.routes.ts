@@ -37,22 +37,26 @@ export const eventRoutes: FastifyPluginAsync = async (app) => {
 
     const savedEvent = await eventRepository.save(event);
 
-    return reply.code(201).send(savedEvent);
+    return reply.code(201).send({ ...savedEvent, participantCount: 0 });
   });
 
   app.get("/", { preHandler: [app.authenticate] }, async () => {
-    return eventRepository.find({
-      order: { startedAt: "ASC" },
-    });
+    return eventRepository
+      .createQueryBuilder("event")
+      .loadRelationCountAndMap("event.participantCount", "event.participants")
+      .orderBy("event.startedAt", "ASC")
+      .getMany();
   });
 
   app.get<{ Params: EventParams }>(
     "/:id",
     { preHandler: [app.authenticate] },
     async (request, reply) => {
-      const event = await eventRepository.findOne({
-        where: { id: request.params.id },
-      });
+      const event = await eventRepository
+        .createQueryBuilder("event")
+        .where("event.id = :id", { id: request.params.id })
+        .loadRelationCountAndMap("event.participantCount", "event.participants")
+        .getOne();
 
       if (!event) {
         return reply.code(404).send({ message: "Event not found" });
@@ -95,8 +99,11 @@ export const eventRoutes: FastifyPluginAsync = async (app) => {
       Object.assign(event, parsedBody.data);
 
       const updatedEvent = await eventRepository.save(event);
+      const participantCount = await participantsRepository.count({
+        where: { eventId: updatedEvent.id },
+      });
       return reply.send({
-        event: updatedEvent,
+        event: { ...updatedEvent, participantCount },
         message: "You have successfully edited the event",
       });
     },

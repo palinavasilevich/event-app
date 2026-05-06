@@ -7,6 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { formatEventStartDate } from "@/lib/format-event-start-date";
+import { getCountFreeSeats } from "@/lib/get-count-free-seats";
 import type { EventDto } from "@/shared/api/events/types";
 import { Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -52,7 +53,7 @@ export function EventDetailsCard({
           </div>
           <div>
             <p className="text-muted-foreground">Capacity</p>
-            <p>Up to {event.capacity} participants</p>
+            <p>{getCountFreeSeats(event)} / {event.capacity} seats free</p>
           </div>
           <div>
             <p className="text-muted-foreground">Description</p>
@@ -90,7 +91,7 @@ export function EventDetailsCard({
               Leave event
             </Button>
           ) : (
-            <Button size="sm" disabled={isMutationLoading} onClick={onJoin}>
+            <Button size="sm" disabled={isMutationLoading || getCountFreeSeats(event) === 0} onClick={onJoin}>
               {isMutationLoading && <Loader2 className="animate-spin" />}
               Join event
             </Button>

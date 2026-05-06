@@ -3,6 +3,7 @@ export type EventDto = {
   title: string;
   description: string;
   capacity: number;
+  participantCount: number;
   address: string;
   startedAt: string;
   ownerId: string;

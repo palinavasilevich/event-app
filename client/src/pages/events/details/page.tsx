@@ -93,8 +93,8 @@ export function EventDetailsPage() {
 
   return (
     <PageShell title={event.title}>
-      <div className="mx-auto flex w-full max-w-2xl flex-col gap-4">
-        <Button variant="ghost" size="sm" className="w-fit" asChild>
+      <div className="flex w-full max-w-2xl flex-col gap-4">
+        <Button variant="outline" size="sm" className="w-fit" asChild>
           <Link to="/events">Back to list</Link>
         </Button>
         <EventDetailsCard

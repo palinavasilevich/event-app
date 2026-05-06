@@ -8,6 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { formatEventStartDate } from "@/lib/format-event-start-date";
+import { getCountFreeSeats } from "@/lib/get-count-free-seats";
 import type { EventDto } from "@/shared/api/events/types";
 import { Link } from "react-router-dom";
 
@@ -39,7 +40,7 @@ export function EventListCard({ event }: EventListCardProps) {
 
       <CardFooter className="mt-auto justify-between pt-4">
         <span className="text-muted-foreground">
-          Up to {event.capacity} people
+          {getCountFreeSeats(event)} / {event.capacity} seats free
         </span>
         <Button asChild variant="outline" size="sm">
           <Link to={`/events/${event.id}`}>More</Link>
