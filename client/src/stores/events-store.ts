@@ -18,6 +18,7 @@ type EventsState = {
   isEventsLoading: boolean;
   isJoinedLoading: boolean;
   isMutationLoading: boolean;
+  mutatingEventId: string | null;
   eventsError: string | null;
   clearError: () => void;
   setMyEventsFilter: (filter: MyEventsFilter) => void;
@@ -37,6 +38,7 @@ export const useEventsStore = create<EventsState>((set, get) => ({
   isEventsLoading: false,
   isJoinedLoading: false,
   isMutationLoading: false,
+  mutatingEventId: null,
   eventsError: null,
   clearError: () => set({ eventsError: null }),
   setMyEventsFilter: (filter) => set({ myEventsFilter: filter }),
@@ -107,7 +109,7 @@ export const useEventsStore = create<EventsState>((set, get) => ({
     }
   },
   removeEvent: async (id) => {
-    set({ isMutationLoading: true, eventsError: null });
+    set({ isMutationLoading: true, mutatingEventId: id, eventsError: null });
 
     try {
       await eventsApi.removeEvent(id);
@@ -118,10 +120,12 @@ export const useEventsStore = create<EventsState>((set, get) => ({
           (joinedEvent) => joinedEvent.event.id !== id,
         ),
         isMutationLoading: false,
+        mutatingEventId: null,
       }));
     } catch (error) {
       set({
         isMutationLoading: false,
+        mutatingEventId: null,
         eventsError: getApiErrorMessage(error, "Failed to delete event"),
       });
 
@@ -143,16 +147,17 @@ export const useEventsStore = create<EventsState>((set, get) => ({
     }
   },
   joinEvent: async (id) => {
-    set({ isMutationLoading: true, eventsError: null });
+    set({ isMutationLoading: true, mutatingEventId: id, eventsError: null });
 
     try {
       await eventsApi.joinEvent(id);
       await get().loadJoinedEvents();
 
-      set({ isMutationLoading: false });
+      set({ isMutationLoading: false, mutatingEventId: null });
     } catch (error) {
       set({
         isMutationLoading: false,
+        mutatingEventId: null,
         eventsError: getApiErrorMessage(error, "Failed to join to event"),
       });
 
@@ -160,7 +165,7 @@ export const useEventsStore = create<EventsState>((set, get) => ({
     }
   },
   leaveEvent: async (id) => {
-    set({ isMutationLoading: true, eventsError: null });
+    set({ isMutationLoading: true, mutatingEventId: id, eventsError: null });
 
     try {
       await eventsApi.leaveEvent(id);
@@ -170,10 +175,12 @@ export const useEventsStore = create<EventsState>((set, get) => ({
           (joinedEvent) => joinedEvent.event.id !== id,
         ),
         isMutationLoading: false,
+        mutatingEventId: null,
       }));
     } catch (error) {
       set({
         isMutationLoading: false,
+        mutatingEventId: null,
         eventsError: getApiErrorMessage(error, "Failed to leave to event"),
       });
 

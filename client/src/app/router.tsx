@@ -9,6 +9,7 @@ import { EventsAllPage } from "@/pages/events/all/page";
 import { CreateEventPage } from "@/pages/events/create/page";
 import { EventDetailsPage } from "@/pages/events/details/page";
 import { EventsEditPage } from "@/pages/events/edit/page";
+import { MyEventsPage } from "@/pages/events/my/page";
 
 export const appRouter = createBrowserRouter([
   {
@@ -39,7 +40,7 @@ export const appRouter = createBrowserRouter([
 
           {
             path: "events/my",
-            element: <h1>MY EVENTS</h1>,
+            element: <MyEventsPage />,
           },
 
           {

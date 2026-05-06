@@ -61,12 +61,11 @@ export function EventDetailsPage() {
     (joinedEvent) => joinedEvent.event.id === event.id,
   );
 
-  // Errors from mutations are handled via eventsError in the store
   const handleJoinEvent = async () => {
     try {
       await joinEvent(event.id);
     } catch {
-      //
+      // Errors from mutations are handled via eventsError in the store
     }
   };
 
@@ -74,7 +73,7 @@ export function EventDetailsPage() {
     try {
       await leaveEvent(event.id);
     } catch {
-      //
+      // Errors from mutations are handled via eventsError in the store
     }
   };
 
@@ -87,7 +86,7 @@ export function EventDetailsPage() {
       await removeEvent(event.id);
       navigate("/events", { replace: true });
     } catch {
-      //
+      // Errors from mutations are handled via eventsError in the store
     }
   };
 
