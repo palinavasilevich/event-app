@@ -63,7 +63,7 @@ export const useEventsStore = create<EventsState>((set, get) => ({
 
       set((state) => ({
         events: [...state.events, createdEvent].sort((a, b) =>
-          a.startedAt.localeCompare(b.startedAt),
+          (a.startedAt ?? "").localeCompare(b.startedAt ?? ""),
         ),
         isMutationLoading: false,
       }));
@@ -87,7 +87,7 @@ export const useEventsStore = create<EventsState>((set, get) => ({
       set((state) => ({
         events: state.events
           .map((event) => (event.id === id ? updatedEvent : event))
-          .sort((a, b) => a.startedAt.localeCompare(b.startedAt)),
+          .sort((a, b) => (a.startedAt ?? "").localeCompare(b.startedAt ?? "")),
         joinedEvents: state.joinedEvents.map((joinedEvent) =>
           joinedEvent.event.id === id
             ? { ...joinedEvent, event: updatedEvent }

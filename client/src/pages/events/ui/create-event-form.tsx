@@ -4,22 +4,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useEventsStore } from "@/stores/events-store";
 import { useNavigate } from "react-router-dom";
+import { startedAtSchema } from "@/lib/event-schemas";
 import { EventForm } from "./event-form";
 import { format } from "date-fns";
+import { DATETIME_LOCAL_INPUT_FORMAT } from "@/lib/format-event-start-date";
 
 type CreateEventFormProps = {
   className?: string;
 };
-
-const startedAtSchema = z
-  .string()
-  .refine((value) => !Number.isNaN(new Date(value).getTime()), {
-    message: "Please enter the correct date",
-  })
-  .refine((value) => new Date(value) > new Date(), {
-    message: "Start date must be in the future",
-  })
-  .transform((value) => new Date(value).toISOString());
 
 const createEventSchema = z.object({
   title: z.string().trim().min(1, { error: "Title is required" }).max(200),
@@ -52,7 +44,7 @@ export function CreateEventForm({ className }: CreateEventFormProps) {
       description: "",
       capacity: 50,
       address: "",
-      startedAt: format(new Date(), "yyyy-MM-dd'T'HH:mm"),
+      startedAt: format(new Date(), DATETIME_LOCAL_INPUT_FORMAT),
     },
   });
 
