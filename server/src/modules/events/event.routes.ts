@@ -102,10 +102,7 @@ export const eventRoutes: FastifyPluginAsync = async (app) => {
       const participantCount = await participantsRepository.count({
         where: { eventId: updatedEvent.id },
       });
-      return reply.send({
-        event: { ...updatedEvent, participantCount },
-        message: "You have successfully edited the event",
-      });
+      return reply.send({ ...updatedEvent, participantCount });
     },
   );
 
