@@ -7,6 +7,7 @@ import { AuthRegisterPage } from "@/pages/auth/register/page";
 import { AuthLoginPage } from "@/pages/auth/login/page";
 import { EventsAllPage } from "@/pages/events/all/page";
 import { CreateEventPage } from "@/pages/events/create/page";
+import { EventDetailsPage } from "@/pages/events/details/page";
 
 export const appRouter = createBrowserRouter([
   {
@@ -47,7 +48,7 @@ export const appRouter = createBrowserRouter([
 
           {
             path: "events/:id",
-            element: <h1>EVENT BY ID</h1>,
+            element: <EventDetailsPage />,
           },
 
           {

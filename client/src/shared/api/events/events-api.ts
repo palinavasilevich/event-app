@@ -7,8 +7,8 @@ export const eventsApi = {
     const { data } = await http.get<EventDto[]>("/events");
     return data;
   },
-  async getEventById(id: string): Promise<EventDto> {
-    const { data } = await http.get<EventDto>(`/events/${id}`);
+  async getEventById(id: string, signal?: AbortSignal): Promise<EventDto> {
+    const { data } = await http.get<EventDto>(`/events/${id}`, { signal });
     return data;
   },
   async createNewEvent(payload: CreateEventRequest): Promise<EventDto> {
