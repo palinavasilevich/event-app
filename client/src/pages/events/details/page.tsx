@@ -6,6 +6,7 @@ import { useEventById } from "../hooks/use-event-by-id";
 import { PageShell } from "@/components/page-shell";
 import { Button } from "@/components/ui/button";
 import { EventDetailsCard } from "../ui/event-details-card";
+import { Spinner } from "@/components/ui/spinner";
 
 export function EventDetailsPage() {
   const { id } = useParams<{ id: string }>();
@@ -35,7 +36,7 @@ export function EventDetailsPage() {
   if (isLoading) {
     return (
       <PageShell title="Event">
-        <span>Loading...</span>
+        <Spinner className="size-10" />
       </PageShell>
     );
   }
@@ -78,10 +79,6 @@ export function EventDetailsPage() {
   };
 
   const handleRemoveEvent = async () => {
-    const ok = confirm("Are you sure you want to delete the event?");
-
-    if (!ok) return;
-
     try {
       await removeEvent(event.id);
       navigate("/events", { replace: true });

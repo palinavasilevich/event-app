@@ -11,6 +11,7 @@ import { DATETIME_LOCAL_INPUT_FORMAT } from "@/lib/format-event-start-date";
 import { format, isValid, parseISO } from "date-fns";
 import { startedAtSchema } from "@/lib/event-schemas";
 import { EventForm } from "./event-form";
+import { Spinner } from "@/components/ui/spinner";
 
 type EventEditFormProps = {
   className?: string;
@@ -75,8 +76,8 @@ export function EventEditForm({ className }: EventEditFormProps) {
 
   if (isLoading) {
     return (
-      <div className={cn("mx-auto w-full max-w-2xl space-y-6", className)}>
-        <span>Loading...</span>
+      <div className={cn("flex justify-center items-center", className)}>
+        <Spinner className="size-10" />
       </div>
     );
   }

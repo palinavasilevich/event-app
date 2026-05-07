@@ -6,6 +6,7 @@ import { MyEventsTitle } from "../ui/my-events-title";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CreatedEventsTable } from "../ui/tables/created-events-table";
 import { JoinedEventsTable } from "../ui/tables/joined-events-table";
+import { Spinner } from "@/components/ui/spinner";
 
 export function MyEventsPage() {
   const user = useAuthStore((state) => state.user);
@@ -27,10 +28,6 @@ export function MyEventsPage() {
   }, [loadEvents, loadJoinedEvents]);
 
   const handleRemoveEvent = async (eventId: string) => {
-    const ok = confirm("Are you sure you want to delete the event?");
-
-    if (!ok) return;
-
     try {
       await removeEvent(eventId);
     } catch {
@@ -39,10 +36,6 @@ export function MyEventsPage() {
   };
 
   const handleLeaveEvent = async (eventId: string) => {
-    const ok = confirm("Are you sure you want to leave the event?");
-
-    if (!ok) return;
-
     try {
       await leaveEvent(eventId);
     } catch {
@@ -98,7 +91,7 @@ export function MyEventsPage() {
 
           <TabsContent value="created" className="mt-0">
             {isEventsLoading ? (
-              "Loading..."
+              <Spinner className="size-10" />
             ) : createdEventsCount === 0 ? (
               "You have not created an event yet"
             ) : (
@@ -112,7 +105,7 @@ export function MyEventsPage() {
 
           <TabsContent value="joined" className="mt-0">
             {isJoinedLoading ? (
-              "Loading..."
+              <Spinner className="size-10" />
             ) : joinedEventsCount === 0 ? (
               "You are not participating in any events yet"
             ) : (

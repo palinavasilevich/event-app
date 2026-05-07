@@ -3,6 +3,7 @@ import { PageShell } from "@/components/page-shell";
 import { useEventsStore } from "@/stores/events-store";
 import { useEffect } from "react";
 import { EventListCard } from "../ui/event-list-card";
+import { Spinner } from "@/components/ui/spinner";
 
 export function EventsAllPage() {
   const events = useEventsStore((state) => state.events);
@@ -18,7 +19,7 @@ export function EventsAllPage() {
 
   return (
     <PageShell title="All Events">
-      {isShowInitialLoading ? "Loading..." : null}
+      {isShowInitialLoading ? <Spinner className="size-10" /> : null}
 
       {error ? <ErrorRetryBlock className="mb-4" message={error} /> : null}
 

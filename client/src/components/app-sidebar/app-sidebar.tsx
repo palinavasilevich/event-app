@@ -4,7 +4,6 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
-  useSidebar,
 } from "../ui/sidebar";
 import { AppSidebarLogo } from "./app-sidebar-logo";
 import { AppSidebarFooter } from "./app-sidebar-footer";
@@ -13,7 +12,6 @@ import { AppSidebarNav } from "./app-sidebar-nav";
 export function AppSidebar() {
   const user = useAuthStore((state) => state.user);
   const logout = useAuthStore((state) => state.logout);
-  const { state } = useSidebar();
 
   if (!user) {
     return null;
@@ -28,11 +26,7 @@ export function AppSidebar() {
         <AppSidebarNav />
       </SidebarContent>
       <SidebarFooter>
-        <AppSidebarFooter
-          user={user}
-          isSidebarExpanded={state === "expanded"}
-          onLogout={logout}
-        />
+        <AppSidebarFooter user={user} onLogout={logout} />
       </SidebarFooter>
     </Sidebar>
   );

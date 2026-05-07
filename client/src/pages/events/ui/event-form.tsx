@@ -47,9 +47,9 @@ export function EventForm({
   onSubmit,
 }: EventFormProps) {
   return (
-    <div className={cn("mx-auto w-full max-w-2xl space-y-6", className)}>
+    <div className={cn("w-full max-w-2xl space-y-6", className)}>
       <div className="space-y-1">
-        <Button variant="ghost" asChild size="sm">
+        <Button variant="outline" asChild size="sm">
           <Link to={backTo}>
             <ArrowLeftIcon className="size-4" />
             {backLabel}
@@ -186,7 +186,12 @@ export function EventForm({
           </CardContent>
 
           <CardFooter className="justify-end gap-2 border-t">
-            <Button variant="ghost" type="button" disabled={isLoading} onClick={onCancel}>
+            <Button
+              variant="ghost"
+              type="button"
+              disabled={isLoading}
+              onClick={onCancel}
+            >
               Cancel
             </Button>
 

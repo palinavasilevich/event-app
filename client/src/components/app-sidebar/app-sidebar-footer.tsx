@@ -1,20 +1,17 @@
 import type { UserPublic } from "@/shared/api/auth/types";
-import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "../ui/sidebar";
+import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "../ui/sidebar";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { LogOutIcon } from "lucide-react";
 import { getUserInitials } from "@/lib/get-user-initials";
 
 type AppSidebarFooterProps = {
   user: UserPublic;
-  isSidebarExpanded: boolean;
   onLogout: () => void;
 };
 
-export function AppSidebarFooter({
-  user,
-  isSidebarExpanded,
-  onLogout,
-}: AppSidebarFooterProps) {
+export function AppSidebarFooter({ user, onLogout }: AppSidebarFooterProps) {
+  const { state } = useSidebar();
+  const isSidebarExpanded = state === "expanded";
   return (
     <SidebarMenu className="gap-2 px-1">
       {isSidebarExpanded ? (

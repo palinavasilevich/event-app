@@ -1,3 +1,4 @@
+import { ConfirmDialog } from "@/components/confirm-dialog";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -53,7 +54,9 @@ export function EventDetailsCard({
           </div>
           <div>
             <p className="text-muted-foreground">Capacity</p>
-            <p>{getCountFreeSeats(event)} / {event.capacity} seats free</p>
+            <p>
+              {getCountFreeSeats(event)} / {event.capacity} seats free
+            </p>
           </div>
           <div>
             <p className="text-muted-foreground">Description</p>
@@ -70,28 +73,46 @@ export function EventDetailsCard({
               <Button variant="outline" size="sm" asChild>
                 <Link to={`/events/${event.id}/edit`}>Edit</Link>
               </Button>
-              <Button
-                variant="destructive"
-                size="sm"
-                disabled={isMutationLoading}
-                onClick={onRemove}
-              >
-                {isMutationLoading && <Loader2 className="animate-spin" />}
-                Delete
-              </Button>
+              <ConfirmDialog
+                trigger={
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    disabled={isMutationLoading}
+                  >
+                    {isMutationLoading && <Loader2 className="animate-spin" />}
+                    Delete
+                  </Button>
+                }
+                title="Delete event"
+                description="This action cannot be undone. The event will be permanently deleted."
+                onConfirm={onRemove}
+                confirmLabel="Delete"
+              />
             </>
           ) : isJoined ? (
-            <Button
-              variant="outline"
-              size="sm"
-              disabled={isMutationLoading}
-              onClick={onLeave}
-            >
-              {isMutationLoading && <Loader2 className="animate-spin" />}
-              Leave event
-            </Button>
+            <ConfirmDialog
+              trigger={
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={isMutationLoading}
+                >
+                  {isMutationLoading && <Loader2 className="animate-spin" />}
+                  Leave event
+                </Button>
+              }
+              title="Leave event"
+              description="Are you sure you want to leave the event?"
+              onConfirm={onLeave}
+              confirmLabel="Leave"
+            />
           ) : (
-            <Button size="sm" disabled={isMutationLoading || getCountFreeSeats(event) === 0} onClick={onJoin}>
+            <Button
+              size="sm"
+              disabled={isMutationLoading || getCountFreeSeats(event) === 0}
+              onClick={onJoin}
+            >
               {isMutationLoading && <Loader2 className="animate-spin" />}
               Join event
             </Button>

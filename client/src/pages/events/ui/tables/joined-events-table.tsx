@@ -11,6 +11,7 @@ import {
 import { formatEventStartDate } from "@/lib/format-event-start-date";
 import type { JoinedEventItem } from "@/shared/api/me/types";
 import { Loader2 } from "lucide-react";
+import { ConfirmDialog } from "@/components/confirm-dialog";
 
 type JoinedEventsTableProps = {
   joinedEvents: JoinedEventItem[];
@@ -53,15 +54,24 @@ export function JoinedEventsTable({
               {joinedEvent.event.address}
             </TableCell>
             <TableCell className="text-right">
-              <Button
-                variant="destructive"
-                size="sm"
-                disabled={mutatingEventId === joinedEvent.event.id}
-                onClick={() => onLeave(joinedEvent.event.id)}
-              >
-                {mutatingEventId === joinedEvent.event.id && <Loader2 className="animate-spin" />}
-                Leave event
-              </Button>
+              <ConfirmDialog
+                trigger={
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={mutatingEventId === joinedEvent.event.id}
+                  >
+                    {mutatingEventId === joinedEvent.event.id && (
+                      <Loader2 className="animate-spin" />
+                    )}
+                    Leave event
+                  </Button>
+                }
+                title="Leave event"
+                description="Are you sure you want to leave the event?"
+                onConfirm={() => onLeave(joinedEvent.event.id)}
+                confirmLabel="Leave"
+              />
             </TableCell>
           </TableRow>
         ))}

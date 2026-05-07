@@ -11,6 +11,7 @@ import {
 import { formatEventStartDate } from "@/lib/format-event-start-date";
 import type { EventDto } from "@/shared/api/events/types";
 import { Loader2 } from "lucide-react";
+import { ConfirmDialog } from "@/components/confirm-dialog";
 
 type CreatedEventsTableProps = {
   events: EventDto[];
@@ -55,15 +56,25 @@ export function CreatedEventsTable({
               <Button variant="outline" size="sm" asChild className="mr-2">
                 <Link to={`/events/${event.id}/edit`}>Edit</Link>
               </Button>
-              <Button
-                variant="destructive"
-                size="sm"
-                disabled={mutatingEventId === event.id}
-                onClick={() => onRemove(event.id)}
-              >
-                {mutatingEventId === event.id && <Loader2 className="animate-spin" />}
-                Delete
-              </Button>
+
+              <ConfirmDialog
+                trigger={
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    disabled={mutatingEventId === event.id}
+                  >
+                    {mutatingEventId === event.id && (
+                      <Loader2 className="animate-spin" />
+                    )}
+                    Delete
+                  </Button>
+                }
+                title="Delete event"
+                description="This action cannot be undone. The event will be permanently deleted."
+                onConfirm={() => onRemove(event.id)}
+                confirmLabel="Delete"
+              />
             </TableCell>
           </TableRow>
         ))}
