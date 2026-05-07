@@ -1,7 +1,6 @@
 {
   "name": "server",
   "module": "index.ts",
-  "type": "module",
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "build": "tsc -p tsconfig.json && tsc-alias -p tsconfig.json",

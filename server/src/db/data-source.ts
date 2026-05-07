@@ -7,7 +7,7 @@ import { Event } from "./entities/event.entity";
 export const AppDataSource = new DataSource({
   type: "postgres",
   url: env.databaseUrl,
-  synchronize: false,
+  synchronize: true,
   logging: true,
   entities: [User, Event, EventParticipant],
   migrations: ["src/db/migrations/**/*.ts"],
