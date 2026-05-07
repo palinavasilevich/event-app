@@ -19,13 +19,14 @@ export function EventDetailsPage() {
   const isMutationLoading = useEventsStore((state) => state.isMutationLoading);
   const eventsError = useEventsStore((state) => state.eventsError);
   const clearError = useEventsStore((state) => state.clearError);
+  const loadJoinedEvents = useEventsStore((state) => state.loadJoinedEvents);
 
   useEffect(() => {
     clearError();
   }, [clearError]);
 
   // fetchJoinedEvents: true syncs joined-events store alongside loading the event
-  const { event, isLoading, isNotFound, loadError } = useEventById(id, {
+  const { event, isLoading, isNotFound, loadError, reload } = useEventById(id, {
     fetchJoinedEvents: true,
   });
 
@@ -65,6 +66,8 @@ export function EventDetailsPage() {
   const handleJoinEvent = async () => {
     try {
       await joinEvent(event.id);
+      reload();
+      await loadJoinedEvents();
     } catch {
       // Errors from mutations are handled via eventsError in the store
     }
@@ -73,6 +76,8 @@ export function EventDetailsPage() {
   const handleLeaveEvent = async () => {
     try {
       await leaveEvent(event.id);
+      reload();
+      await loadJoinedEvents();
     } catch {
       // Errors from mutations are handled via eventsError in the store
     }

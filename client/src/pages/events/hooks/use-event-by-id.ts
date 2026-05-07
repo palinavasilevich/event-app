@@ -3,7 +3,7 @@ import { eventsApi } from "@/shared/api/events/events-api";
 import type { EventDto } from "@/shared/api/events/types";
 import { isAxiosError } from "@/shared/api/http";
 import { useEventsStore } from "@/stores/events-store";
-import { useEffect, useReducer } from "react";
+import { useCallback, useEffect, useReducer, useState } from "react";
 
 type State = {
   event: EventDto | null;
@@ -73,6 +73,9 @@ export function useEventById(
   const fetchJoinedEvents = options?.fetchJoinedEvents ?? false;
   const loadJoinedEvents = useEventsStore((state) => state.loadJoinedEvents);
 
+  const [reloadKey, setReloadKey] = useState(0);
+  const reload = useCallback(() => setReloadKey((k) => k + 1), []);
+
   const [state, dispatch] = useReducer(reducer, {
     event: null,
     isLoading: !!id,
@@ -119,7 +122,7 @@ export function useEventById(
     return () => {
       controller.abort();
     };
-  }, [id, fetchJoinedEvents, loadJoinedEvents]);
+  }, [id, fetchJoinedEvents, loadJoinedEvents, reloadKey]);
 
-  return state;
+  return { ...state, reload };
 }

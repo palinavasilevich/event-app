@@ -38,6 +38,7 @@ export function MyEventsPage() {
   const handleLeaveEvent = async (eventId: string) => {
     try {
       await leaveEvent(eventId);
+      await loadJoinedEvents();
     } catch {
       // Errors from mutations are handled via eventsError in the store
     }
