@@ -38,7 +38,7 @@ export function JoinedEventsTable({
       <TableBody>
         {joinedEvents.map((joinedEvent) => (
           <TableRow key={joinedEvent.event.id}>
-            <TableCell className="max-w-48 font-medium">
+            <TableCell className="max-w-48 font-medium whitespace-normal">
               <Link
                 className="hover:text-primary"
                 to={`/events/${joinedEvent.event.id}`}
@@ -50,7 +50,7 @@ export function JoinedEventsTable({
             <TableCell className="text-muted-foreground">
               {formatEventStartDate(joinedEvent.event.startedAt)}
             </TableCell>
-            <TableCell className="max-w-48 text-muted-foreground">
+            <TableCell className="max-w-48 text-muted-foreground whitespace-normal">
               {joinedEvent.event.address}
             </TableCell>
             <TableCell className="text-center">

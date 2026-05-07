@@ -31,7 +31,7 @@ export function CreatedEventsTable({
           <TableHead>Title</TableHead>
           <TableHead>Event Start</TableHead>
           <TableHead>Address</TableHead>
-          <TableHead>Capacity</TableHead>
+          <TableHead className="text-center">Capacity</TableHead>
           <TableHead className="text-center">Actions</TableHead>
         </TableRow>
       </TableHeader>
@@ -39,7 +39,7 @@ export function CreatedEventsTable({
       <TableBody>
         {events.map((event) => (
           <TableRow key={event.id}>
-            <TableCell className="max-w-48 font-medium">
+            <TableCell className="max-w-48 font-medium whitespace-normal">
               <Link className="hover:text-primary" to={`/events/${event.id}`}>
                 {event.title}
               </Link>
@@ -48,10 +48,12 @@ export function CreatedEventsTable({
             <TableCell className="text-muted-foreground">
               {formatEventStartDate(event.startedAt)}
             </TableCell>
-            <TableCell className="max-w-48 text-muted-foreground">
+            <TableCell className="max-w-48 text-muted-foreground whitespace-normal">
               {event.address}
             </TableCell>
-            <TableCell className="tabular-nums">{event.capacity}</TableCell>
+            <TableCell className="tabular-nums text-center">
+              {event.capacity}
+            </TableCell>
             <TableCell className="text-center">
               <Button variant="outline" size="sm" asChild className="mr-2">
                 <Link to={`/events/${event.id}/edit`}>Edit</Link>
