@@ -31,7 +31,7 @@ export function JoinedEventsTable({
           <TableHead>Title</TableHead>
           <TableHead>Event Start</TableHead>
           <TableHead>Address</TableHead>
-          <TableHead className="text-right">Actions</TableHead>
+          <TableHead className="text-center">Actions</TableHead>
         </TableRow>
       </TableHeader>
 
@@ -53,7 +53,7 @@ export function JoinedEventsTable({
             <TableCell className="max-w-48 text-muted-foreground">
               {joinedEvent.event.address}
             </TableCell>
-            <TableCell className="text-right">
+            <TableCell className="text-center">
               <ConfirmDialog
                 trigger={
                   <Button

@@ -32,7 +32,7 @@ export function CreatedEventsTable({
           <TableHead>Event Start</TableHead>
           <TableHead>Address</TableHead>
           <TableHead>Capacity</TableHead>
-          <TableHead className="text-right">Actions</TableHead>
+          <TableHead className="text-center">Actions</TableHead>
         </TableRow>
       </TableHeader>
 
@@ -52,7 +52,7 @@ export function CreatedEventsTable({
               {event.address}
             </TableCell>
             <TableCell className="tabular-nums">{event.capacity}</TableCell>
-            <TableCell className="text-right">
+            <TableCell className="text-center">
               <Button variant="outline" size="sm" asChild className="mr-2">
                 <Link to={`/events/${event.id}/edit`}>Edit</Link>
               </Button>
