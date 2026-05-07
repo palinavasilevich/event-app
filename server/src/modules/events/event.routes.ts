@@ -44,6 +44,7 @@ export const eventRoutes: FastifyPluginAsync = async (app) => {
     return eventRepository
       .createQueryBuilder("event")
       .loadRelationCountAndMap("event.participantCount", "event.participants")
+      .where("event.startedAt > :now", { now: new Date() })
       .orderBy("event.startedAt", "ASC")
       .getMany();
   });
