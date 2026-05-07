@@ -1,5 +1,10 @@
 import type { UserPublic } from "@/shared/api/auth/types";
-import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "../ui/sidebar";
+import {
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  useSidebar,
+} from "../ui/sidebar";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { LogOutIcon } from "lucide-react";
 import { getUserInitials } from "@/lib/get-user-initials";
@@ -13,10 +18,10 @@ export function AppSidebarFooter({ user, onLogout }: AppSidebarFooterProps) {
   const { state } = useSidebar();
   const isSidebarExpanded = state === "expanded";
   return (
-    <SidebarMenu className="gap-2 px-1">
+    <SidebarMenu className="gap-2">
       {isSidebarExpanded ? (
         <SidebarMenuItem>
-          <div className="flex items-center gap-2 rounded-md px-2 py-1">
+          <div className="flex items-center gap-2 rounded-md px-1 py-1">
             <Avatar className="size-8 rounded-lg">
               <AvatarFallback className="text-xs">
                 {getUserInitials(user.name)}
