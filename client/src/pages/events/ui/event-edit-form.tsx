@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { Navigate, generatePath, useNavigate, useParams } from "react-router-dom";
+import { ROUTES } from "@/shared/constants/routes";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useEventsStore } from "@/stores/events-store";
@@ -74,7 +75,7 @@ export function EventEditForm({ className }: EventEditFormProps) {
   }, [event, form]);
 
   if (!id) {
-    return <Navigate to="/events" replace />;
+    return <Navigate to={ROUTES.EVENTS} replace />;
   }
 
   if (isLoading) {
@@ -111,7 +112,7 @@ export function EventEditForm({ className }: EventEditFormProps) {
 
   const onSubmit = form.handleSubmit(async (data) => {
     await updateEvent(event.id, data);
-    navigate(`/events/${event.id}`, { replace: true });
+    navigate(generatePath(ROUTES.EVENT, { id: event.id }), { replace: true });
   });
 
   return (
@@ -120,9 +121,9 @@ export function EventEditForm({ className }: EventEditFormProps) {
       title="Edit event"
       form={form}
       subtitle="Change the fields and save"
-      backTo={`/events/${event.id}`}
+      backTo={generatePath(ROUTES.EVENT, { id: event.id })}
       backLabel="Back to event"
-      onCancel={() => navigate(`/events/${event.id}`)}
+      onCancel={() => navigate(generatePath(ROUTES.EVENT, { id: event.id }))}
       submitLabel="Save"
       submittingLabel="Saving..."
       error={eventsError}

@@ -10,10 +10,11 @@ import { CreateEventPage } from "@/pages/events/create/page";
 import { EventDetailsPage } from "@/pages/events/details/page";
 import { EventsEditPage } from "@/pages/events/edit/page";
 import { MyEventsPage } from "@/pages/events/my/page";
+import { ROUTES } from "@/shared/constants/routes";
 
 export const appRouter = createBrowserRouter([
   {
-    path: "/",
+    path: ROUTES.HOME,
     element: <RootLayout />,
     children: [
       { index: true, element: <RootRedirect /> },
@@ -21,11 +22,11 @@ export const appRouter = createBrowserRouter([
         element: <GuestRoute />,
         children: [
           {
-            path: "login",
+            path: ROUTES.LOGIN,
             element: <AuthLoginPage />,
           },
           {
-            path: "register",
+            path: ROUTES.REGISTER,
             element: <AuthRegisterPage />,
           },
         ],
@@ -34,32 +35,32 @@ export const appRouter = createBrowserRouter([
         element: <ProtectedRoute />,
         children: [
           {
-            path: "events",
+            path: ROUTES.EVENTS,
             element: <EventsAllPage />,
           },
 
           {
-            path: "events/my",
+            path: ROUTES.MY_EVENTS,
             element: <MyEventsPage />,
           },
 
           {
-            path: "events/new",
+            path: ROUTES.NEW_EVENTS,
             element: <CreateEventPage />,
           },
 
           {
-            path: "events/:id",
+            path: ROUTES.EVENT,
             element: <EventDetailsPage />,
           },
 
           {
-            path: "events/:id/edit",
+            path: ROUTES.EDIT_EVENT,
             element: <EventsEditPage />,
           },
         ],
       },
-      { path: "*", element: <Navigate to="/" replace /> },
+      { path: "*", element: <Navigate to={ROUTES.HOME} replace /> },
     ],
   },
 ]);

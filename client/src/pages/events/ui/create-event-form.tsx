@@ -3,7 +3,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useEventsStore } from "@/stores/events-store";
-import { useNavigate } from "react-router-dom";
+import { generatePath, useNavigate } from "react-router-dom";
+import { ROUTES } from "@/shared/constants/routes";
 import { startedAtSchema } from "@/lib/event-schemas";
 import { EventForm } from "./event-form";
 import { format } from "date-fns";
@@ -52,7 +53,7 @@ export function CreateEventForm({ className }: CreateEventFormProps) {
 
   const onSubmit = form.handleSubmit(async (data) => {
     const createdEvent = await createEvent(data);
-    navigate(`/events/${createdEvent.id}`, { replace: true });
+    navigate(generatePath(ROUTES.EVENT, { id: createdEvent.id }), { replace: true });
   });
 
   return (
@@ -60,9 +61,9 @@ export function CreateEventForm({ className }: CreateEventFormProps) {
       title="Create event"
       form={form}
       subtitle="Fill in the event fields"
-      backTo="/events"
+      backTo={ROUTES.EVENTS}
       backLabel="Back"
-      onCancel={() => navigate("/events")}
+      onCancel={() => navigate(ROUTES.EVENTS)}
       submitLabel="Create event"
       submittingLabel="Creating..."
       error={eventsError}

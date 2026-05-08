@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+import { Link, generatePath } from "react-router-dom";
+import { ROUTES } from "@/shared/constants/routes";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -41,7 +42,7 @@ export function JoinedEventsTable({
             <TableCell className="max-w-48 font-medium whitespace-normal">
               <Link
                 className="hover:text-primary"
-                to={`/events/${joinedEvent.event.id}`}
+                to={generatePath(ROUTES.EVENT, { id: joinedEvent.event.id })}
               >
                 {joinedEvent.event.title}
               </Link>

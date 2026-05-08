@@ -11,7 +11,8 @@ import {
 import { formatEventStartDate } from "@/lib/format-event-start-date";
 import { getCountFreeSeats } from "@/lib/get-count-free-seats";
 import type { EventDto } from "@/shared/api/events/types";
-import { Link } from "react-router-dom";
+import { Link, generatePath } from "react-router-dom";
+import { ROUTES } from "@/shared/constants/routes";
 
 type EventListCardProps = {
   event: EventDto;
@@ -27,7 +28,7 @@ export function EventListCard({ event }: EventListCardProps) {
         <CardTitle className="text-base">
           <Link
             className="hove:text-primary hover:underline"
-            to={`/events/${event.id}`}
+            to={generatePath(ROUTES.EVENT, { id: event.id })}
           >
             {event.title}
           </Link>
@@ -47,7 +48,7 @@ export function EventListCard({ event }: EventListCardProps) {
           {getCountFreeSeats(event)} / {event.capacity} seats free
         </span>
         <Button asChild variant="outline" size="sm">
-          <Link to={`/events/${event.id}`}>More</Link>
+          <Link to={generatePath(ROUTES.EVENT, { id: event.id })}>More</Link>
         </Button>
       </CardFooter>
     </Card>

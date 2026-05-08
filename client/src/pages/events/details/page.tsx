@@ -2,6 +2,7 @@ import { useAuthStore } from "@/stores/auth-store";
 import { useEventsStore } from "@/stores/events-store";
 import { useEffect } from "react";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
+import { ROUTES } from "@/shared/constants/routes";
 import { useEventById } from "../hooks/use-event-by-id";
 import { PageShell } from "@/components/page-shell";
 import { Button } from "@/components/ui/button";
@@ -31,7 +32,7 @@ export function EventDetailsPage() {
   });
 
   if (!id) {
-    return <Navigate to="/events" replace />;
+    return <Navigate to={ROUTES.EVENTS} replace />;
   }
 
   if (isLoading) {
@@ -86,7 +87,7 @@ export function EventDetailsPage() {
   const handleRemoveEvent = async () => {
     try {
       await removeEvent(event.id);
-      navigate("/events", { replace: true });
+      navigate(ROUTES.EVENTS, { replace: true });
     } catch {
       // Errors from mutations are handled via eventsError in the store
     }
@@ -96,7 +97,7 @@ export function EventDetailsPage() {
     <PageShell title={event.title}>
       <div className="flex w-full max-w-2xl flex-col gap-4">
         <Button variant="outline" size="sm" className="w-fit" asChild>
-          <Link to="/events">Back to list</Link>
+          <Link to={ROUTES.EVENTS}>Back to list</Link>
         </Button>
         <EventDetailsCard
           event={event}

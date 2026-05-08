@@ -1,12 +1,13 @@
 import { Link } from "react-router-dom";
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "../ui/sidebar";
+import { ROUTES } from "@/shared/constants/routes";
 
 export function AppSidebarLogo() {
   return (
     <SidebarMenu>
       <SidebarMenuItem>
         <SidebarMenuButton size="lg" asChild>
-          <Link to="/events" className="gap-3">
+          <Link to={ROUTES.EVENTS} className="gap-3">
             <img
               src="/calendar.svg"
               alt="Calendar Icon"

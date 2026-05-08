@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { ROUTES } from "@/shared/constants/routes";
 import { Controller, useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -100,7 +101,7 @@ export function LoginForm() {
                 Don't have an account yet?{" "}
                 <Link
                   className="underline-offset-4 hover:underline hover:text-chart-5"
-                  to="/register"
+                  to={ROUTES.REGISTER}
                   onClick={clearAuthError}
                 >
                   Sign Up

@@ -1,29 +1,30 @@
 import { Link, useLocation } from "react-router-dom";
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "../ui/sidebar";
 import { CalendarCheck2Icon, PlusIcon, SquaresExclude } from "lucide-react";
+import { ROUTES } from "@/shared/constants/routes";
 
 const navItems = [
   {
-    to: "/events/new",
+    to: ROUTES.NEW_EVENTS,
     label: "Create event",
     icon: PlusIcon,
-    isActive: (path: string) => path === "/events/new",
+    isActive: (path: string) => path === ROUTES.NEW_EVENTS,
     className: "mt-3 bg-primary py-3 text-primary-foreground",
   },
   {
-    to: "/events",
+    to: ROUTES.EVENTS,
     label: "All events",
     icon: SquaresExclude,
     isActive: (path: string) =>
-      path.startsWith("/events") &&
-      path !== "/events/new" &&
-      !path.startsWith("/events/my"),
+      path.startsWith(ROUTES.EVENTS) &&
+      path !== ROUTES.NEW_EVENTS &&
+      !path.startsWith(ROUTES.MY_EVENTS),
   },
   {
-    to: "/events/my",
+    to: ROUTES.MY_EVENTS,
     label: "My events",
     icon: CalendarCheck2Icon,
-    isActive: (path: string) => path.startsWith("/events/my"),
+    isActive: (path: string) => path.startsWith(ROUTES.MY_EVENTS),
   },
 ];
 

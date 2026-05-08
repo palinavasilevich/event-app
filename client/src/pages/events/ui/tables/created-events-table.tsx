@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+import { Link, generatePath } from "react-router-dom";
+import { ROUTES } from "@/shared/constants/routes";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -40,7 +41,7 @@ export function CreatedEventsTable({
         {events.map((event) => (
           <TableRow key={event.id}>
             <TableCell className="max-w-48 font-medium whitespace-normal">
-              <Link className="hover:text-primary" to={`/events/${event.id}`}>
+              <Link className="hover:text-primary" to={generatePath(ROUTES.EVENT, { id: event.id })}>
                 {event.title}
               </Link>
             </TableCell>
@@ -56,7 +57,7 @@ export function CreatedEventsTable({
             </TableCell>
             <TableCell className="text-center">
               <Button variant="outline" size="sm" asChild className="mr-2">
-                <Link to={`/events/${event.id}/edit`}>Edit</Link>
+                <Link to={generatePath(ROUTES.EDIT_EVENT, { id: event.id })}>Edit</Link>
               </Button>
 
               <ConfirmDialog
