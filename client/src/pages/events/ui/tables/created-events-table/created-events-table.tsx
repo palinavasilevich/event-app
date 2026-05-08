@@ -1,7 +1,7 @@
 import type { EventDto } from "@/shared/api/events/types";
 import { useMemo } from "react";
-import { DataTable } from "./data-table";
 import { createColumns } from "./columns";
+import { DataTable } from "../data-table";
 
 type CreatedEventsTableProps = {
   events: EventDto[];

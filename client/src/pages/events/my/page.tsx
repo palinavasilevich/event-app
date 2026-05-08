@@ -4,10 +4,9 @@ import { useEventsStore } from "@/stores/events-store";
 import { useEffect, useMemo } from "react";
 import { MyEventsTitle } from "../ui/my-events-title";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-// import { CreatedEventsTable } from "../ui/tables/created-events-table";
-import { JoinedEventsTable } from "../ui/tables/joined-events-table";
 import { Spinner } from "@/components/ui/spinner";
 import { CreatedEventsTable } from "../ui/tables/created-events-table/created-events-table";
+import { JoinedEventsTable } from "../ui/tables/joined-events-table/joined-events-table";
 
 export function MyEventsPage() {
   const user = useAuthStore((state) => state.user);
@@ -98,7 +97,7 @@ export function MyEventsPage() {
             {isEventsLoading ? (
               <Spinner className="size-10" />
             ) : createdEventsCount === 0 ? (
-              "You have not created an event yet"
+              <p className="text-center">You have not created an event yet</p>
             ) : (
               <CreatedEventsTable
                 events={createdEvents}
@@ -112,15 +111,15 @@ export function MyEventsPage() {
             {isJoinedLoading ? (
               <Spinner className="size-10" />
             ) : joinedEventsCount === 0 ? (
-              "You are not participating in any events yet"
+              <p className="text-center">
+                You are not participating in any events yet
+              </p>
             ) : (
-              <div className="overflow-hidden rounded-lg border">
-                <JoinedEventsTable
-                  joinedEvents={sortedJoinedEvents}
-                  mutatingEventId={mutatingEventId}
-                  onLeave={handleLeaveEvent}
-                />
-              </div>
+              <JoinedEventsTable
+                joinedEvents={sortedJoinedEvents}
+                mutatingEventId={mutatingEventId}
+                onLeave={handleLeaveEvent}
+              />
             )}
           </TabsContent>
         </Tabs>
