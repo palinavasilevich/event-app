@@ -24,6 +24,7 @@ const createEventSchema = z.object({
     .max(300),
   address: z.string().trim().min(1, { error: "Address is required" }).max(255),
   startedAt: startedAtSchema,
+  color: z.string().regex(/^#[0-9A-Fa-f]{6}$/).optional().nullable(),
 });
 
 export function CreateEventForm({ className }: CreateEventFormProps) {
@@ -45,6 +46,7 @@ export function CreateEventForm({ className }: CreateEventFormProps) {
       capacity: 50,
       address: "",
       startedAt: format(new Date(), DATETIME_LOCAL_INPUT_FORMAT),
+      color: "#3b82f6",
     },
   });
 

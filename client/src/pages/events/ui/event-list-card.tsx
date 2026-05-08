@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+
 import {
   Card,
   CardContent,
@@ -18,7 +19,10 @@ type EventListCardProps = {
 
 export function EventListCard({ event }: EventListCardProps) {
   return (
-    <Card className="h-full">
+    <Card
+      className="h-full"
+      style={event.color ? { backgroundColor: `${event.color}26` } : undefined}
+    >
       <CardHeader>
         <CardTitle className="text-base">
           <Link

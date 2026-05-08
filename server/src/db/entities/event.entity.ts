@@ -31,6 +31,9 @@ export class Event {
   @Column({ type: "timestamptz" })
   startedAt!: Date;
 
+  @Column({ type: "varchar", length: 7, nullable: true, default: null })
+  color!: string | null;
+
   @ManyToOne(() => User, (user) => user.events, { onDelete: "CASCADE" })
   @JoinColumn({ name: "ownerId" })
   owner!: User;

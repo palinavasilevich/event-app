@@ -28,6 +28,7 @@ const updateEventSchema = z.object({
     .max(300),
   address: z.string().trim().min(1, { error: "Address is required" }).max(255),
   startedAt: startedAtSchema,
+  color: z.string().regex(/^#[0-9A-Fa-f]{6}$/).optional().nullable(),
 });
 
 export function EventEditForm({ className }: EventEditFormProps) {
@@ -53,6 +54,7 @@ export function EventEditForm({ className }: EventEditFormProps) {
       address: "",
       capacity: 50,
       startedAt: "",
+      color: "#3b82f6",
     },
   });
 
@@ -67,6 +69,7 @@ export function EventEditForm({ className }: EventEditFormProps) {
       startedAt: isValid(parsed)
         ? format(parsed, DATETIME_LOCAL_INPUT_FORMAT)
         : "",
+      color: event.color ?? "#3b82f6",
     });
   }, [event, form]);
 

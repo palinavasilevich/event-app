@@ -11,9 +11,20 @@ import { Slider } from "@/components/ui/slider";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import type { CreateEventRequest } from "@/shared/api/events/types";
-import { ArrowLeftIcon } from "lucide-react";
+import { ArrowLeftIcon, CheckIcon } from "lucide-react";
 import { Controller, type UseFormReturn } from "react-hook-form";
 import { Link } from "react-router-dom";
+
+const PRESET_COLORS = [
+  "#ef4444",
+  "#f97316",
+  "#eab308",
+  "#22c55e",
+  "#06b6d4",
+  "#3b82f6",
+  "#8b5cf6",
+  "#ec4899",
+];
 
 type EventFormValues = CreateEventRequest;
 
@@ -168,7 +179,6 @@ export function EventForm({
                     </div>
                     <Slider
                       id="capacity-slider"
-                      className="mb-4"
                       min={1}
                       max={300}
                       step={1}
@@ -179,6 +189,38 @@ export function EventForm({
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
                     )}
+                  </Field>
+                )}
+              />
+
+              <Controller
+                name="color"
+                control={form.control}
+                render={({ field }) => (
+                  <Field>
+                    <FieldLabel>Color</FieldLabel>
+                    <div className="flex gap-2 mb-4">
+                      {PRESET_COLORS.map((color) => (
+                        <button
+                          key={color}
+                          type="button"
+                          className={cn(
+                            "relative size-7 rounded-full border-2 transition-transform focus:outline-none",
+                            field.value === color
+                              ? "border-foreground scale-110"
+                              : "border-transparent hover:scale-105",
+                          )}
+                          style={{ backgroundColor: color }}
+                          onClick={() => field.onChange(color)}
+                          disabled={isLoading}
+                          aria-label={color}
+                        >
+                          {field.value === color && (
+                            <CheckIcon className="absolute inset-0 m-auto size-3.5 text-white drop-shadow" />
+                          )}
+                        </button>
+                      ))}
+                    </div>
                   </Field>
                 )}
               />

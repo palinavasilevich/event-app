@@ -23,7 +23,7 @@ export const eventRoutes: FastifyPluginAsync = async (app) => {
       });
     }
 
-    const { title, description, capacity, address, startedAt } =
+    const { title, description, capacity, address, startedAt, color } =
       parsedBody.data;
 
     const event = eventRepository.create({
@@ -32,6 +32,7 @@ export const eventRoutes: FastifyPluginAsync = async (app) => {
       capacity,
       address,
       startedAt,
+      color: color ?? null,
       ownerId: request.user.sub,
     });
 

@@ -38,7 +38,11 @@ export function EventDetailsCard({
     <>
       {eventsError && <p className="text-sm text-destructive">{eventsError}</p>}
 
-      <Card>
+      <Card
+        style={
+          event.color ? { backgroundColor: `${event.color}26` } : undefined
+        }
+      >
         <CardHeader>
           <CardTitle className="text-lg leading-snug">{event.title}</CardTitle>
         </CardHeader>
