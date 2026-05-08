@@ -27,7 +27,7 @@ export function CreatedEventsTable({
 }: CreatedEventsTableProps) {
   return (
     <Table>
-      <TableHeader>
+      <TableHeader className="sticky top-0 z-10 bg-muted">
         <TableRow>
           <TableHead>Title</TableHead>
           <TableHead>Event Start</TableHead>
@@ -41,7 +41,10 @@ export function CreatedEventsTable({
         {events.map((event) => (
           <TableRow key={event.id}>
             <TableCell className="max-w-48 font-medium whitespace-normal">
-              <Link className="hover:text-primary" to={generatePath(ROUTES.EVENT, { id: event.id })}>
+              <Link
+                className="hover:text-primary"
+                to={generatePath(ROUTES.EVENT, { id: event.id })}
+              >
                 {event.title}
               </Link>
             </TableCell>
@@ -57,7 +60,9 @@ export function CreatedEventsTable({
             </TableCell>
             <TableCell className="text-center">
               <Button variant="outline" size="sm" asChild className="mr-2">
-                <Link to={generatePath(ROUTES.EDIT_EVENT, { id: event.id })}>Edit</Link>
+                <Link to={generatePath(ROUTES.EDIT_EVENT, { id: event.id })}>
+                  Edit
+                </Link>
               </Button>
 
               <ConfirmDialog

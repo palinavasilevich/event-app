@@ -65,7 +65,7 @@ export function MyEventsPage() {
   return (
     <PageShell title="My Events">
       <div className="flex w-full max-w-6xl flex-col gap-6">
-        <div className="grid grid-cols-2 gap-3 sm:max-w-md">
+        <div className="w-full mx-auto grid grid-cols-2 gap-3 sm:max-w-md">
           <MyEventsTitle label="Created" value={createdEventsCount} />
           <MyEventsTitle label="Joined" value={joinedEventsCount} />
         </div>
@@ -81,7 +81,7 @@ export function MyEventsPage() {
           }}
           className="flex flex-col gap-4"
         >
-          <TabsList className="w-full max-w-md gap-4">
+          <TabsList className="w-full max-w-md mx-auto gap-4">
             <TabsTrigger value="created" className="flex-1">
               Created
             </TabsTrigger>
@@ -96,11 +96,13 @@ export function MyEventsPage() {
             ) : createdEventsCount === 0 ? (
               "You have not created an event yet"
             ) : (
-              <CreatedEventsTable
-                events={createdEvents}
-                mutatingEventId={mutatingEventId}
-                onRemove={handleRemoveEvent}
-              />
+              <div className="overflow-hidden rounded-lg border">
+                <CreatedEventsTable
+                  events={createdEvents}
+                  mutatingEventId={mutatingEventId}
+                  onRemove={handleRemoveEvent}
+                />
+              </div>
             )}
           </TabsContent>
 
@@ -110,11 +112,13 @@ export function MyEventsPage() {
             ) : joinedEventsCount === 0 ? (
               "You are not participating in any events yet"
             ) : (
-              <JoinedEventsTable
-                joinedEvents={sortedJoinedEvents}
-                mutatingEventId={mutatingEventId}
-                onLeave={handleLeaveEvent}
-              />
+              <div className="overflow-hidden rounded-lg border">
+                <JoinedEventsTable
+                  joinedEvents={sortedJoinedEvents}
+                  mutatingEventId={mutatingEventId}
+                  onLeave={handleLeaveEvent}
+                />
+              </div>
             )}
           </TabsContent>
         </Tabs>

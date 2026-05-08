@@ -51,7 +51,9 @@ export function EventDetailsCard({
         }
       >
         <CardHeader>
-          <CardTitle className="text-lg leading-snug">{event.title}</CardTitle>
+          <CardTitle className="text-xl font-semibold leading-snug">
+            {event.title}
+          </CardTitle>
         </CardHeader>
 
         <CardContent className="space-y-3 text-sm">

@@ -44,8 +44,8 @@ export function EventDetailsPage() {
 
   if (isLoading) {
     return (
-      <PageShell title="Event">
-        <Spinner className="size-10" />
+      <PageShell>
+        <Spinner className="size-10 text-muted-foreground" />
       </PageShell>
     );
   }
@@ -118,7 +118,7 @@ export function EventDetailsPage() {
   };
 
   return (
-    <PageShell title={event.title}>
+    <PageShell>
       <div className="flex w-full max-w-2xl flex-col gap-4">
         <Button variant="outline" size="sm" className="w-fit" asChild>
           <Link to={ROUTES.EVENTS}>Back to list</Link>

@@ -19,10 +19,14 @@ import { ConfirmDialog } from "@/components/confirm-dialog";
 
 export function FavoriteEventsPage() {
   const favoriteEvents = useEventsStore((state) => state.favoriteEvents);
-  const isFavoritesLoading = useEventsStore((state) => state.isFavoritesLoading);
+  const isFavoritesLoading = useEventsStore(
+    (state) => state.isFavoritesLoading,
+  );
   const eventsError = useEventsStore((state) => state.eventsError);
   const mutatingEventId = useEventsStore((state) => state.mutatingEventId);
-  const loadFavoriteEvents = useEventsStore((state) => state.loadFavoriteEvents);
+  const loadFavoriteEvents = useEventsStore(
+    (state) => state.loadFavoriteEvents,
+  );
   const removeFavorite = useEventsStore((state) => state.removeFavorite);
 
   useEffect(() => {
@@ -39,7 +43,7 @@ export function FavoriteEventsPage() {
 
   return (
     <PageShell title="Favorite Events">
-      <div className="flex w-full max-w-6xl flex-col gap-6">
+      <div className="overflow-hidden rounded-lg border flex w-full max-w-6xl flex-col gap-6">
         {eventsError && <p>Loading error: {eventsError}</p>}
 
         {isFavoritesLoading ? (
@@ -48,7 +52,7 @@ export function FavoriteEventsPage() {
           <p>You have no favorite events yet</p>
         ) : (
           <Table>
-            <TableHeader>
+            <TableHeader className="sticky top-0 z-10 bg-muted">
               <TableRow>
                 <TableHead>Title</TableHead>
                 <TableHead>Event Start</TableHead>
@@ -88,7 +92,7 @@ export function FavoriteEventsPage() {
                           {mutatingEventId === event.id && (
                             <Loader2 className="animate-spin" />
                           )}
-                          Remove
+                          Remove from favorites
                         </Button>
                       }
                       title="Remove from favorites"

@@ -37,6 +37,8 @@ type EventFormProps = {
   submitLabel: string;
   submittingLabel: string;
   form: UseFormReturn<EventFormValues>;
+  selectedColor?: string | null;
+  onColorChange: (color: string) => void;
   error?: string | null;
   isLoading?: boolean;
   className?: string;
@@ -52,13 +54,15 @@ export function EventForm({
   submitLabel,
   submittingLabel,
   form,
+  selectedColor,
+  onColorChange,
   error,
   isLoading,
   className,
   onSubmit,
 }: EventFormProps) {
   return (
-    <div className={cn("w-full max-w-2xl space-y-6", className)}>
+    <div className={cn("w-full max-w-2xl space-y-4", className)}>
       <div className="space-y-1">
         <Button variant="outline" asChild size="sm">
           <Link to={backTo}>
@@ -66,8 +70,10 @@ export function EventForm({
             {backLabel}
           </Link>
         </Button>
-        <h1 className="font-heading text-2xl font-semibold">{title}</h1>
-        <p className="text-sm text-muted-foreground">{subtitle}</p>
+        <div className="text-center">
+          <h1 className="font-heading text-2xl font-semibold">{title}</h1>
+          <p className="text-sm text-muted-foreground">{subtitle}</p>
+        </div>
       </div>
 
       <Card>
@@ -193,37 +199,31 @@ export function EventForm({
                 )}
               />
 
-              <Controller
-                name="color"
-                control={form.control}
-                render={({ field }) => (
-                  <Field>
-                    <FieldLabel>Color</FieldLabel>
-                    <div className="flex gap-2 mb-4">
-                      {PRESET_COLORS.map((color) => (
-                        <button
-                          key={color}
-                          type="button"
-                          className={cn(
-                            "relative size-7 rounded-full border-2 transition-transform focus:outline-none",
-                            field.value === color
-                              ? "border-foreground scale-110"
-                              : "border-transparent hover:scale-105",
-                          )}
-                          style={{ backgroundColor: color }}
-                          onClick={() => field.onChange(color)}
-                          disabled={isLoading}
-                          aria-label={color}
-                        >
-                          {field.value === color && (
-                            <CheckIcon className="absolute inset-0 m-auto size-3.5 text-white drop-shadow" />
-                          )}
-                        </button>
-                      ))}
-                    </div>
-                  </Field>
-                )}
-              />
+              <Field>
+                <FieldLabel>Color</FieldLabel>
+                <div className="flex gap-2 mb-4">
+                  {PRESET_COLORS.map((color) => (
+                    <button
+                      key={color}
+                      type="button"
+                      className={cn(
+                        "relative size-7 rounded-full border-2 transition-transform focus:outline-none",
+                        selectedColor === color
+                          ? "border-foreground scale-110"
+                          : "border-transparent hover:scale-105",
+                      )}
+                      style={{ backgroundColor: color }}
+                      onClick={() => onColorChange(color)}
+                      disabled={isLoading}
+                      aria-label={color}
+                    >
+                      {selectedColor === color && (
+                        <CheckIcon className="absolute inset-0 m-auto size-3.5 text-white drop-shadow" />
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </Field>
             </FieldGroup>
           </CardContent>
 

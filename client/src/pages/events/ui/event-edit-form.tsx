@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { Navigate, generatePath, useNavigate, useParams } from "react-router-dom";
 import { ROUTES } from "@/shared/constants/routes";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -74,6 +74,8 @@ export function EventEditForm({ className }: EventEditFormProps) {
     });
   }, [event, form]);
 
+  const selectedColor = useWatch({ control: form.control, name: "color" });
+
   if (!id) {
     return <Navigate to={ROUTES.EVENTS} replace />;
   }
@@ -120,6 +122,8 @@ export function EventEditForm({ className }: EventEditFormProps) {
       key={event.id}
       title="Edit event"
       form={form}
+      selectedColor={selectedColor}
+      onColorChange={(color) => form.setValue("color", color)}
       subtitle="Change the fields and save"
       backTo={generatePath(ROUTES.EVENT, { id: event.id })}
       backLabel="Back to event"

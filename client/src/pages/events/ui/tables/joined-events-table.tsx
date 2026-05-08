@@ -27,7 +27,7 @@ export function JoinedEventsTable({
 }: JoinedEventsTableProps) {
   return (
     <Table>
-      <TableHeader>
+      <TableHeader className="sticky top-0 z-10 bg-muted">
         <TableRow>
           <TableHead>Title</TableHead>
           <TableHead>Event Start</TableHead>

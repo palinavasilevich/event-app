@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useEventsStore } from "@/stores/events-store";
@@ -56,10 +56,14 @@ export function CreateEventForm({ className }: CreateEventFormProps) {
     navigate(generatePath(ROUTES.EVENT, { id: createdEvent.id }), { replace: true });
   });
 
+  const selectedColor = useWatch({ control: form.control, name: "color" });
+
   return (
     <EventForm
       title="Create event"
       form={form}
+      selectedColor={selectedColor}
+      onColorChange={(color) => form.setValue("color", color)}
       subtitle="Fill in the event fields"
       backTo={ROUTES.EVENTS}
       backLabel="Back"
