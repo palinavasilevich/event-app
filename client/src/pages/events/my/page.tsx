@@ -4,9 +4,10 @@ import { useEventsStore } from "@/stores/events-store";
 import { useEffect, useMemo } from "react";
 import { MyEventsTitle } from "../ui/my-events-title";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CreatedEventsTable } from "../ui/tables/created-events-table";
+// import { CreatedEventsTable } from "../ui/tables/created-events-table";
 import { JoinedEventsTable } from "../ui/tables/joined-events-table";
 import { Spinner } from "@/components/ui/spinner";
+import { CreatedEventsTable } from "../ui/tables/created-events-table/created-events-table";
 
 export function MyEventsPage() {
   const user = useAuthStore((state) => state.user);
@@ -90,19 +91,20 @@ export function MyEventsPage() {
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="created" className="mt-0">
+          <TabsContent
+            value="created"
+            className="relative flex flex-col gap-4 overflow-auto"
+          >
             {isEventsLoading ? (
               <Spinner className="size-10" />
             ) : createdEventsCount === 0 ? (
               "You have not created an event yet"
             ) : (
-              <div className="overflow-hidden rounded-lg border">
-                <CreatedEventsTable
-                  events={createdEvents}
-                  mutatingEventId={mutatingEventId}
-                  onRemove={handleRemoveEvent}
-                />
-              </div>
+              <CreatedEventsTable
+                events={createdEvents}
+                mutatingEventId={mutatingEventId}
+                onRemove={handleRemoveEvent}
+              />
             )}
           </TabsContent>
 
