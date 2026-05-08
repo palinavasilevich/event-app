@@ -3,6 +3,7 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -43,6 +44,9 @@ export class Event {
 
   @OneToMany(() => EventParticipant, (participant) => participant.event)
   participants!: EventParticipant[];
+
+  @ManyToMany(() => User, (user) => user.favoriteEvents)
+  favoriteBy!: User[];
 
   @CreateDateColumn({ type: "timestamptz" })
   createdAt!: Date;

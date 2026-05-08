@@ -9,30 +9,37 @@ import {
 } from "@/components/ui/card";
 import { formatEventStartDate } from "@/lib/format-event-start-date";
 import { getCountFreeSeats } from "@/lib/get-count-free-seats";
+import { cn } from "@/lib/utils";
 import type { EventDto } from "@/shared/api/events/types";
-import { Loader2 } from "lucide-react";
+import { Heart, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
 
 type EventDetailsCardProps = {
   event: EventDto;
   isOwner: boolean;
   isJoined: boolean;
+  isFavorite: boolean;
   isMutationLoading: boolean;
   eventsError: string | null;
   onJoin: () => void;
   onLeave: () => void;
   onRemove: () => void;
+  onFavorite: () => void;
+  onUnfavorite: () => void;
 };
 
 export function EventDetailsCard({
   event,
   isOwner,
   isJoined,
+  isFavorite,
   isMutationLoading,
   eventsError,
   onJoin,
   onLeave,
   onRemove,
+  onFavorite,
+  onUnfavorite,
 }: EventDetailsCardProps) {
   return (
     <>
@@ -68,12 +75,28 @@ export function EventDetailsCard({
           </div>
         </CardContent>
 
-        <CardFooter className="flex flex-wrap gap-2 border-t">
+        <CardFooter className="flex flex-wrap justify-between items-center gap-2 border-t">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="px-0 group"
+            disabled={isMutationLoading}
+            onClick={isFavorite ? onUnfavorite : onFavorite}
+          >
+            <Heart
+              className={cn(
+                // "size-4 group-hover:fill-card",
+                isFavorite && "fill-current",
+              )}
+            />
+            {isFavorite ? "Unfavorite" : "Add to favorites"}
+          </Button>
+
           {isOwner ? (
-            <>
-              <p className="mr-auto text-sm text-muted-foreground">
+            <div className="space-x-2">
+              {/* <p className="mr-auto text-sm text-muted-foreground">
                 You are the organizer
-              </p>
+              </p> */}
               <Button variant="outline" size="sm" asChild>
                 <Link to={`/events/${event.id}/edit`}>Edit</Link>
               </Button>
@@ -84,7 +107,7 @@ export function EventDetailsCard({
                     size="sm"
                     disabled={isMutationLoading}
                   >
-                    {isMutationLoading && <Loader2 className="animate-spin" />}
+                    {/* {isMutationLoading && <Loader2 className="animate-spin" />} */}
                     Delete
                   </Button>
                 }
@@ -93,7 +116,7 @@ export function EventDetailsCard({
                 onConfirm={onRemove}
                 confirmLabel="Delete"
               />
-            </>
+            </div>
           ) : isJoined ? (
             <ConfirmDialog
               trigger={

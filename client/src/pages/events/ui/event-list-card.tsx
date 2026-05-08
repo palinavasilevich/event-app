@@ -11,14 +11,23 @@ import {
 import { formatEventStartDate } from "@/lib/format-event-start-date";
 import { getCountFreeSeats } from "@/lib/get-count-free-seats";
 import type { EventDto } from "@/shared/api/events/types";
+import { Heart } from "lucide-react";
 import { Link, generatePath } from "react-router-dom";
 import { ROUTES } from "@/shared/constants/routes";
 
 type EventListCardProps = {
   event: EventDto;
+  isFavorite: boolean;
+  isMutating: boolean;
+  onToggleFavorite: () => void;
 };
 
-export function EventListCard({ event }: EventListCardProps) {
+export function EventListCard({
+  event,
+  isFavorite,
+  isMutating,
+  onToggleFavorite,
+}: EventListCardProps) {
   return (
     <Card
       className="h-full"
@@ -47,9 +56,19 @@ export function EventListCard({ event }: EventListCardProps) {
         <span className="text-muted-foreground">
           {getCountFreeSeats(event)} / {event.capacity} seats free
         </span>
-        <Button asChild variant="outline" size="sm">
-          <Link to={generatePath(ROUTES.EVENT, { id: event.id })}>More</Link>
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            disabled={isMutating}
+            onClick={onToggleFavorite}
+          >
+            <Heart className={isFavorite ? "fill-current" : ""} />
+          </Button>
+          <Button asChild variant="outline" size="sm">
+            <Link to={generatePath(ROUTES.EVENT, { id: event.id })}>More</Link>
+          </Button>
+        </div>
       </CardFooter>
     </Card>
   );

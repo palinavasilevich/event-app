@@ -1,6 +1,11 @@
 import { Link, useLocation } from "react-router-dom";
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "../ui/sidebar";
-import { CalendarCheck2Icon, PlusIcon, SquaresExclude } from "lucide-react";
+import {
+  CalendarCheck2Icon,
+  PlusIcon,
+  Calendar,
+  CalendarHeart,
+} from "lucide-react";
 import { ROUTES } from "@/shared/constants/routes";
 
 const navItems = [
@@ -14,7 +19,7 @@ const navItems = [
   {
     to: ROUTES.EVENTS,
     label: "All events",
-    icon: SquaresExclude,
+    icon: Calendar,
     isActive: (path: string) =>
       path.startsWith(ROUTES.EVENTS) &&
       path !== ROUTES.NEW_EVENTS &&
@@ -25,6 +30,13 @@ const navItems = [
     label: "My events",
     icon: CalendarCheck2Icon,
     isActive: (path: string) => path.startsWith(ROUTES.MY_EVENTS),
+  },
+
+  {
+    to: ROUTES.FAVORITE_EVENTS,
+    label: "Favorite events",
+    icon: CalendarHeart,
+    isActive: (path: string) => path.startsWith(ROUTES.FAVORITE_EVENTS),
   },
 ];
 

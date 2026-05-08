@@ -10,6 +10,7 @@ import { CreateEventPage } from "@/pages/events/create/page";
 import { EventDetailsPage } from "@/pages/events/details/page";
 import { EventsEditPage } from "@/pages/events/edit/page";
 import { MyEventsPage } from "@/pages/events/my/page";
+import { FavoriteEventsPage } from "@/pages/events/favorite/page";
 import { ROUTES } from "@/shared/constants/routes";
 
 export const appRouter = createBrowserRouter([
@@ -42,6 +43,11 @@ export const appRouter = createBrowserRouter([
           {
             path: ROUTES.MY_EVENTS,
             element: <MyEventsPage />,
+          },
+
+          {
+            path: ROUTES.FAVORITE_EVENTS,
+            element: <FavoriteEventsPage />,
           },
 
           {

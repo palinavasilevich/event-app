@@ -14,17 +14,24 @@ export function EventDetailsPage() {
   const navigate = useNavigate();
   const user = useAuthStore((state) => state.user);
   const joinedEvents = useEventsStore((state) => state.joinedEvents);
+  const favoriteEvents = useEventsStore((state) => state.favoriteEvents);
   const joinEvent = useEventsStore((state) => state.joinEvent);
   const leaveEvent = useEventsStore((state) => state.leaveEvent);
   const removeEvent = useEventsStore((state) => state.removeEvent);
+  const addFavorite = useEventsStore((state) => state.addFavorite);
+  const removeFavorite = useEventsStore((state) => state.removeFavorite);
   const isMutationLoading = useEventsStore((state) => state.isMutationLoading);
   const eventsError = useEventsStore((state) => state.eventsError);
   const clearError = useEventsStore((state) => state.clearError);
   const loadJoinedEvents = useEventsStore((state) => state.loadJoinedEvents);
+  const loadFavoriteEvents = useEventsStore(
+    (state) => state.loadFavoriteEvents,
+  );
 
   useEffect(() => {
     clearError();
-  }, [clearError]);
+    loadFavoriteEvents().catch(() => {});
+  }, [clearError, loadFavoriteEvents]);
 
   // fetchJoinedEvents: true syncs joined-events store alongside loading the event
   const { event, isLoading, isNotFound, loadError, reload } = useEventById(id, {
@@ -63,6 +70,7 @@ export function EventDetailsPage() {
   const isJoined = joinedEvents.some(
     (joinedEvent) => joinedEvent.event.id === event.id,
   );
+  const isFavorite = favoriteEvents.some((e) => e.id === event.id);
 
   const handleJoinEvent = async () => {
     try {
@@ -93,6 +101,22 @@ export function EventDetailsPage() {
     }
   };
 
+  const handleFavorite = async () => {
+    try {
+      await addFavorite(event.id);
+    } catch {
+      // Errors from mutations are handled via eventsError in the store
+    }
+  };
+
+  const handleUnfavorite = async () => {
+    try {
+      await removeFavorite(event.id);
+    } catch {
+      // Errors from mutations are handled via eventsError in the store
+    }
+  };
+
   return (
     <PageShell title={event.title}>
       <div className="flex w-full max-w-2xl flex-col gap-4">
@@ -103,11 +127,14 @@ export function EventDetailsPage() {
           event={event}
           isJoined={isJoined}
           isOwner={isOwner}
+          isFavorite={isFavorite}
           isMutationLoading={isMutationLoading}
           eventsError={eventsError}
           onLeave={handleLeaveEvent}
           onJoin={handleJoinEvent}
           onRemove={handleRemoveEvent}
+          onFavorite={handleFavorite}
+          onUnfavorite={handleUnfavorite}
         />
       </div>
     </PageShell>

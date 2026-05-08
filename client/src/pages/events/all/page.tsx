@@ -7,13 +7,35 @@ import { Spinner } from "@/components/ui/spinner";
 
 export function EventsAllPage() {
   const events = useEventsStore((state) => state.events);
+  const favoriteEvents = useEventsStore((state) => state.favoriteEvents);
+  const mutatingEventId = useEventsStore((state) => state.mutatingEventId);
   const loadEvents = useEventsStore((state) => state.loadEvents);
+  const loadFavoriteEvents = useEventsStore(
+    (state) => state.loadFavoriteEvents,
+  );
+  const addFavorite = useEventsStore((state) => state.addFavorite);
+  const removeFavorite = useEventsStore((state) => state.removeFavorite);
   const isLoading = useEventsStore((state) => state.isEventsLoading);
   const error = useEventsStore((state) => state.eventsError);
 
   useEffect(() => {
     loadEvents();
-  }, [loadEvents]);
+    loadFavoriteEvents().catch(() => {});
+  }, [loadEvents, loadFavoriteEvents]);
+
+  const favoriteIds = new Set(favoriteEvents.map((e) => e.id));
+
+  const handleToggleFavorite = async (eventId: string) => {
+    try {
+      if (favoriteIds.has(eventId)) {
+        await removeFavorite(eventId);
+      } else {
+        await addFavorite(eventId);
+      }
+    } catch {
+      // Errors handled via eventsError in the store
+    }
+  };
 
   const isShowInitialLoading = isLoading && events.length === 0;
 
@@ -30,7 +52,12 @@ export function EventsAllPage() {
       <ul className="grid w-full max-w-7xl grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         {events.map((event) => (
           <li key={event.id}>
-            <EventListCard event={event} />
+            <EventListCard
+              event={event}
+              isFavorite={favoriteIds.has(event.id)}
+              isMutating={mutatingEventId === event.id}
+              onToggleFavorite={() => handleToggleFavorite(event.id)}
+            />
           </li>
         ))}
       </ul>

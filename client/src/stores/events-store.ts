@@ -14,9 +14,11 @@ export type MyEventsFilter = "created" | "joined";
 type EventsState = {
   events: EventDto[];
   joinedEvents: JoinedEventItem[];
+  favoriteEvents: EventDto[];
   myEventsFilter: MyEventsFilter;
   isEventsLoading: boolean;
   isJoinedLoading: boolean;
+  isFavoritesLoading: boolean;
   isMutationLoading: boolean;
   mutatingEventId: string | null;
   eventsError: string | null;
@@ -29,14 +31,19 @@ type EventsState = {
   loadJoinedEvents: () => Promise<void>;
   joinEvent: (id: string) => Promise<void>;
   leaveEvent: (id: string) => Promise<void>;
+  loadFavoriteEvents: () => Promise<void>;
+  addFavorite: (id: string) => Promise<void>;
+  removeFavorite: (id: string) => Promise<void>;
 };
 
 export const useEventsStore = create<EventsState>((set, get) => ({
   events: [],
   joinedEvents: [],
+  favoriteEvents: [],
   myEventsFilter: "created",
   isEventsLoading: false,
   isJoinedLoading: false,
+  isFavoritesLoading: false,
   isMutationLoading: false,
   mutatingEventId: null,
   eventsError: null,
@@ -184,6 +191,58 @@ export const useEventsStore = create<EventsState>((set, get) => ({
         eventsError: getApiErrorMessage(error, "Failed to leave to event"),
       });
 
+      throw error;
+    }
+  },
+
+  loadFavoriteEvents: async () => {
+    set({ isFavoritesLoading: true, eventsError: null });
+
+    try {
+      const favoriteEvents = await meApi.getFavoriteEvents();
+      set({ favoriteEvents, isFavoritesLoading: false });
+    } catch (error) {
+      set({
+        isFavoritesLoading: false,
+        eventsError: getApiErrorMessage(error, "Failed to load favorite events"),
+      });
+      throw error;
+    }
+  },
+
+  addFavorite: async (id) => {
+    set({ isMutationLoading: true, mutatingEventId: id, eventsError: null });
+
+    try {
+      await meApi.addFavorite(id);
+      await get().loadFavoriteEvents();
+      set({ isMutationLoading: false, mutatingEventId: null });
+    } catch (error) {
+      set({
+        isMutationLoading: false,
+        mutatingEventId: null,
+        eventsError: getApiErrorMessage(error, "Failed to add favorite"),
+      });
+      throw error;
+    }
+  },
+
+  removeFavorite: async (id) => {
+    set({ isMutationLoading: true, mutatingEventId: id, eventsError: null });
+
+    try {
+      await meApi.removeFavorite(id);
+      set((state) => ({
+        favoriteEvents: state.favoriteEvents.filter((e) => e.id !== id),
+        isMutationLoading: false,
+        mutatingEventId: null,
+      }));
+    } catch (error) {
+      set({
+        isMutationLoading: false,
+        mutatingEventId: null,
+        eventsError: getApiErrorMessage(error, "Failed to remove favorite"),
+      });
       throw error;
     }
   },
