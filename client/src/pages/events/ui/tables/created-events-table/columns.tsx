@@ -4,7 +4,7 @@ import { formatEventStartDate } from "@/lib/format-event-start-date";
 import type { EventDto } from "@/shared/api/events/types";
 import { ROUTES } from "@/shared/constants/routes";
 import { type ColumnDef } from "@tanstack/react-table";
-import { Loader2 } from "lucide-react";
+import { ArrowUpDown, Loader2 } from "lucide-react";
 import { generatePath, Link } from "react-router-dom";
 
 export type CreatedEvent = Pick<
@@ -19,14 +19,34 @@ export function createColumns(
   return [
     {
       accessorKey: "title",
-      header: "Title",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Title
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
       cell: ({ row }) => (
         <div className="whitespace-normal">{row.original.title}</div>
       ),
     },
     {
       accessorKey: "startedAt",
-      header: "Event Start",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Event Start
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
       cell: ({ row }) => (
         <div>{formatEventStartDate(row.original.startedAt)}</div>
       ),

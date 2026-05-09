@@ -6,7 +6,6 @@ import {
   getSortedRowModel,
   useReactTable,
   type ColumnDef,
-  type PaginationState,
   type SortingState,
 } from "@tanstack/react-table";
 
@@ -31,10 +30,6 @@ export function DataTable<TData, TValue>({
   data,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 10,
-  });
 
   const table = useReactTable({
     data,
@@ -44,10 +39,8 @@ export function DataTable<TData, TValue>({
     getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
-    onPaginationChange: setPagination,
     state: {
       sorting,
-      pagination,
     },
   });
 
@@ -81,7 +74,7 @@ export function DataTable<TData, TValue>({
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="max-w-48">
+                    <TableCell key={cell.id} className="max-w-48 h-16">
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext(),

@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { formatEventStartDate } from "@/lib/format-event-start-date";
 import type { JoinedEventItem } from "@/shared/api/me/types";
 import { type ColumnDef } from "@tanstack/react-table";
-import { Loader2 } from "lucide-react";
+import { ArrowUpDown, Loader2 } from "lucide-react";
 
 export function createColumns(
   mutatingEventId: string | null,
@@ -12,14 +12,34 @@ export function createColumns(
   return [
     {
       accessorKey: "title",
-      header: "Title",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Title
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
       cell: ({ row }) => (
         <div className="whitespace-normal">{row.original.event.title}</div>
       ),
     },
     {
       accessorKey: "startedAt",
-      header: "Event Start",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Event Start
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
       cell: ({ row }) => (
         <div>{formatEventStartDate(row.original.event.startedAt)}</div>
       ),
