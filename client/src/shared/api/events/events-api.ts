@@ -3,8 +3,11 @@ import type { JoinEventResponse } from "../me/types";
 import type { CreateEventRequest, EventDto, UpdateEventRequest } from "./types";
 
 export const eventsApi = {
-  async getAllEvents(): Promise<EventDto[]> {
-    const { data } = await http.get<EventDto[]>("/events");
+  async getEvents(search?: string): Promise<EventDto[]> {
+    const { data } = await http.get<EventDto[]>("/events", {
+      params: { search },
+    });
+
     return data;
   },
   async getEventById(id: string, signal?: AbortSignal): Promise<EventDto> {

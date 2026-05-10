@@ -1,9 +1,10 @@
 import { ErrorRetryBlock } from "@/components/error-retry-block";
 import { PageShell } from "@/components/page-shell";
 import { useEventsStore } from "@/stores/events-store";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { EventListCard } from "../ui/event-list-card";
 import { Spinner } from "@/components/ui/spinner";
+import { SearchForm } from "../ui/search-form";
 
 export function EventsAllPage() {
   const events = useEventsStore((state) => state.events);
@@ -17,9 +18,10 @@ export function EventsAllPage() {
   const removeFavorite = useEventsStore((state) => state.removeFavorite);
   const isLoading = useEventsStore((state) => state.isEventsLoading);
   const error = useEventsStore((state) => state.eventsError);
+  const [currentSearch, setCurrentSearch] = useState<string | undefined>();
 
   useEffect(() => {
-    loadEvents();
+    loadEvents().catch(() => {});
     loadFavoriteEvents().catch(() => {});
   }, [loadEvents, loadFavoriteEvents]);
 
@@ -37,6 +39,11 @@ export function EventsAllPage() {
     }
   };
 
+  const handleSearch = async (search?: string) => {
+    setCurrentSearch(search);
+    await loadEvents(search).catch(() => {});
+  };
+
   const isShowInitialLoading = isLoading && events.length === 0;
 
   return (
@@ -45,8 +52,18 @@ export function EventsAllPage() {
 
       {error ? <ErrorRetryBlock className="mb-4" message={error} /> : null}
 
+      <SearchForm
+        onSubmit={handleSearch}
+        isLoading={isLoading}
+        className="mb-4"
+      />
+
       {!isLoading && !error && events.length === 0 ? (
-        <p className="text-sm text-muted-foreground">No events yet</p>
+        <p className="text-sm text-muted-foreground">
+          {currentSearch
+            ? `No events found for "${currentSearch}"`
+            : "No events yet"}
+        </p>
       ) : null}
 
       <ul className="grid w-full max-w-7xl grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">

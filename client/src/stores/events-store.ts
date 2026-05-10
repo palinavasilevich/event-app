@@ -24,7 +24,7 @@ type EventsState = {
   eventsError: string | null;
   clearError: () => void;
   setMyEventsFilter: (filter: MyEventsFilter) => void;
-  loadEvents: () => Promise<void>;
+  loadEvents: (search?: string) => Promise<void>;
   createEvent: (payload: CreateEventRequest) => Promise<EventDto>;
   updateEvent: (id: string, payload: UpdateEventRequest) => Promise<EventDto>;
   removeEvent: (id: string) => Promise<void>;
@@ -49,11 +49,11 @@ export const useEventsStore = create<EventsState>((set, get) => ({
   eventsError: null,
   clearError: () => set({ eventsError: null }),
   setMyEventsFilter: (filter) => set({ myEventsFilter: filter }),
-  loadEvents: async () => {
+  loadEvents: async (search) => {
     set({ isEventsLoading: true, eventsError: null });
 
     try {
-      const events = await eventsApi.getAllEvents();
+      const events = await eventsApi.getEvents(search);
       set({ events, isEventsLoading: false });
     } catch (error) {
       set({
@@ -188,7 +188,7 @@ export const useEventsStore = create<EventsState>((set, get) => ({
       set({
         isMutationLoading: false,
         mutatingEventId: null,
-        eventsError: getApiErrorMessage(error, "Failed to leave to event"),
+        eventsError: getApiErrorMessage(error, "Failed to leave event"),
       });
 
       throw error;
@@ -204,7 +204,10 @@ export const useEventsStore = create<EventsState>((set, get) => ({
     } catch (error) {
       set({
         isFavoritesLoading: false,
-        eventsError: getApiErrorMessage(error, "Failed to load favorite events"),
+        eventsError: getApiErrorMessage(
+          error,
+          "Failed to load favorite events",
+        ),
       });
       throw error;
     }

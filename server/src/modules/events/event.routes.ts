@@ -41,14 +41,27 @@ export const eventRoutes: FastifyPluginAsync = async (app) => {
     return reply.code(201).send({ ...savedEvent, participantCount: 0 });
   });
 
-  app.get("/", { preHandler: [app.authenticate] }, async () => {
-    return eventRepository
-      .createQueryBuilder("event")
-      .loadRelationCountAndMap("event.participantCount", "event.participants")
-      .where("event.startedAt > :now", { now: new Date() })
-      .orderBy("event.startedAt", "ASC")
-      .getMany();
-  });
+  app.get<{ Querystring: { search?: string } }>(
+    "/",
+    { preHandler: [app.authenticate] },
+    async (request) => {
+      const search = request.query.search;
+
+      const query = eventRepository
+        .createQueryBuilder("event")
+        .loadRelationCountAndMap("event.participantCount", "event.participants")
+        .where("event.startedAt > :now", { now: new Date() })
+        .orderBy("event.startedAt", "ASC");
+
+      if (search) {
+        query.andWhere("LOWER(event.title) LIKE LOWER(:search)", {
+          search: `%${search}%`,
+        });
+      }
+
+      return query.getMany();
+    },
+  );
 
   app.get<{ Params: EventParams }>(
     "/:id",
@@ -128,9 +141,7 @@ export const eventRoutes: FastifyPluginAsync = async (app) => {
 
       await eventRepository.delete({ id: event.id });
 
-      return reply
-        .code(204)
-        .send({ message: "You have successfully deleted the event" });
+      return reply.code(204).send();
     },
   );
 
@@ -213,10 +224,7 @@ export const eventRoutes: FastifyPluginAsync = async (app) => {
         id: existingParticipation.id,
       });
 
-      return reply.code(204).send({
-        message:
-          "You have successfully cancelled your participation in the event",
-      });
+      return reply.code(204).send();
     },
   );
 };
