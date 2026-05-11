@@ -1,10 +1,11 @@
 import { ErrorRetryBlock } from "@/components/error-retry-block";
 import { PageShell } from "@/components/page-shell";
+import type { EventsQueryParams } from "@/shared/api/events/types";
 import { useEventsStore } from "@/stores/events-store";
 import { useEffect, useState } from "react";
 import { EventListCard } from "../ui/event-list-card";
 import { Spinner } from "@/components/ui/spinner";
-import { SearchForm } from "../ui/search-form";
+import { EventFilterForm } from "../ui/event-filter-form";
 
 export function EventsAllPage() {
   const events = useEventsStore((state) => state.events);
@@ -21,9 +22,8 @@ export function EventsAllPage() {
   const [currentSearch, setCurrentSearch] = useState<string | undefined>();
 
   useEffect(() => {
-    loadEvents().catch(() => {});
     loadFavoriteEvents().catch(() => {});
-  }, [loadEvents, loadFavoriteEvents]);
+  }, [loadFavoriteEvents]);
 
   const favoriteIds = new Set(favoriteEvents.map((e) => e.id));
 
@@ -39,9 +39,9 @@ export function EventsAllPage() {
     }
   };
 
-  const handleSearch = async (search?: string) => {
-    setCurrentSearch(search);
-    await loadEvents(search).catch(() => {});
+  const handleSearch = async (params: EventsQueryParams) => {
+    setCurrentSearch(params.search);
+    await loadEvents(params).catch(() => {});
   };
 
   const isShowInitialLoading = isLoading && events.length === 0;
@@ -52,7 +52,7 @@ export function EventsAllPage() {
 
       {error ? <ErrorRetryBlock className="mb-4" message={error} /> : null}
 
-      <SearchForm
+      <EventFilterForm
         onSubmit={handleSearch}
         isLoading={isLoading}
         className="mb-4"

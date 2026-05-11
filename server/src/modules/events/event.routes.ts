@@ -41,17 +41,24 @@ export const eventRoutes: FastifyPluginAsync = async (app) => {
     return reply.code(201).send({ ...savedEvent, participantCount: 0 });
   });
 
-  app.get<{ Querystring: { search?: string } }>(
+  app.get<{ Querystring: { search?: string; startDate?: string; endDate?: string } }>(
     "/",
     { preHandler: [app.authenticate] },
     async (request) => {
-      const search = request.query.search;
+      const { search, startDate, endDate } = request.query;
 
+      const from = startDate ? new Date(startDate) : new Date();
       const query = eventRepository
         .createQueryBuilder("event")
         .loadRelationCountAndMap("event.participantCount", "event.participants")
-        .where("event.startedAt > :now", { now: new Date() })
+        .where("event.startedAt >= :from", { from })
         .orderBy("event.startedAt", "ASC");
+
+      if (endDate) {
+        const to = new Date(endDate);
+        to.setUTCHours(23, 59, 59, 999);
+        query.andWhere("event.startedAt <= :to", { to });
+      }
 
       if (search) {
         query.andWhere("LOWER(event.title) LIKE LOWER(:search)", {

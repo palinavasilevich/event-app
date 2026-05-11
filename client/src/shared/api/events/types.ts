@@ -22,3 +22,9 @@ export type CreateEventRequest = {
 };
 
 export type UpdateEventRequest = Partial<CreateEventRequest>;
+
+export type EventsQueryParams = {
+  search?: string;
+  startDate?: string;
+  endDate?: string;
+};

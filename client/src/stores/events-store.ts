@@ -3,6 +3,7 @@ import { eventsApi } from "@/shared/api/events/events-api";
 import type {
   CreateEventRequest,
   EventDto,
+  EventsQueryParams,
   UpdateEventRequest,
 } from "@/shared/api/events/types";
 import { meApi } from "@/shared/api/me/me-api";
@@ -24,7 +25,7 @@ type EventsState = {
   eventsError: string | null;
   clearError: () => void;
   setMyEventsFilter: (filter: MyEventsFilter) => void;
-  loadEvents: (search?: string) => Promise<void>;
+  loadEvents: (params?: EventsQueryParams) => Promise<void>;
   createEvent: (payload: CreateEventRequest) => Promise<EventDto>;
   updateEvent: (id: string, payload: UpdateEventRequest) => Promise<EventDto>;
   removeEvent: (id: string) => Promise<void>;
@@ -49,11 +50,11 @@ export const useEventsStore = create<EventsState>((set, get) => ({
   eventsError: null,
   clearError: () => set({ eventsError: null }),
   setMyEventsFilter: (filter) => set({ myEventsFilter: filter }),
-  loadEvents: async (search) => {
+  loadEvents: async (params) => {
     set({ isEventsLoading: true, eventsError: null });
 
     try {
-      const events = await eventsApi.getEvents(search);
+      const events = await eventsApi.getEvents(params);
       set({ events, isEventsLoading: false });
     } catch (error) {
       set({

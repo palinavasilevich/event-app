@@ -1,11 +1,11 @@
 import { http } from "../http";
 import type { JoinEventResponse } from "../me/types";
-import type { CreateEventRequest, EventDto, UpdateEventRequest } from "./types";
+import type { CreateEventRequest, EventDto, EventsQueryParams, UpdateEventRequest } from "./types";
 
 export const eventsApi = {
-  async getEvents(search?: string): Promise<EventDto[]> {
+  async getEvents(params?: EventsQueryParams): Promise<EventDto[]> {
     const { data } = await http.get<EventDto[]>("/events", {
-      params: { search },
+      params,
     });
 
     return data;
