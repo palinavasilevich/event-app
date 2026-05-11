@@ -47,7 +47,27 @@ export function EventFilterForm({
   });
 
   const [isShowCalendar, setShowCalendar] = useState(false);
-  const watchedStartDate = useWatch({ control: form.control, name: "startDate" });
+  const calendarRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        calendarRef.current &&
+        !calendarRef.current.contains(e.target as Node)
+      ) {
+        setShowCalendar(false);
+      }
+    };
+    if (isShowCalendar) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isShowCalendar]);
+
+  const watchedStartDate = useWatch({
+    control: form.control,
+    name: "startDate",
+  });
   const watchedEndDate = useWatch({ control: form.control, name: "endDate" });
 
   const onSubmitRef = useRef(onSubmit);
@@ -69,6 +89,7 @@ export function EventFilterForm({
 
   const scheduleSubmit = useCallback(() => {
     clearTimeout(timerRef.current);
+
     timerRef.current = setTimeout(() => {
       form.handleSubmit((data) => {
         onSubmitRef.current({
@@ -148,34 +169,36 @@ export function EventFilterForm({
           </ButtonGroup>
         )}
       />
-      <Button
-        variant="outline"
-        type="button"
-        aria-label="Toggle Calendar"
-        onClick={() => setShowCalendar((prev) => !prev)}
-      >
-        <Calendar />
-      </Button>
-      {isShowCalendar && (
-        <CalendarRange
-          className="absolute right-0 top-9 z-10"
-          value={{
-            from: watchedStartDate ? new Date(watchedStartDate) : undefined,
-            to: watchedEndDate ? new Date(watchedEndDate) : undefined,
-          }}
-          onChange={(range) => {
-            form.setValue(
-              "startDate",
-              range?.from ? format(range.from, "yyyy-MM-dd") : "",
-            );
-            form.setValue(
-              "endDate",
-              range?.to ? format(range.to, "yyyy-MM-dd") : "",
-            );
-            scheduleSubmit();
-          }}
-        />
-      )}
+      <div ref={calendarRef} className="relative">
+        <Button
+          variant="outline"
+          type="button"
+          aria-label="Toggle Calendar"
+          onClick={() => setShowCalendar((prev) => !prev)}
+        >
+          <Calendar />
+        </Button>
+        {isShowCalendar && (
+          <CalendarRange
+            className="absolute right-0 top-9 z-10"
+            value={{
+              from: watchedStartDate ? new Date(watchedStartDate) : undefined,
+              to: watchedEndDate ? new Date(watchedEndDate) : undefined,
+            }}
+            onChange={(range) => {
+              form.setValue(
+                "startDate",
+                range?.from ? format(range.from, "yyyy-MM-dd") : "",
+              );
+              form.setValue(
+                "endDate",
+                range?.to ? format(range.to, "yyyy-MM-dd") : "",
+              );
+              scheduleSubmit();
+            }}
+          />
+        )}
+      </div>
     </form>
   );
 }
