@@ -12,7 +12,9 @@ export const createEventSchema = z.object({
   description: z.string().trim().min(1),
   capacity: z.number().int().positive(),
   address: z.string().trim().min(1).max(255),
-  startedAt: startedAtSchema,
+  startedAt: startedAtSchema.refine((date) => date > new Date(), {
+    message: "startedAt must be in the future",
+  }),
   color: z.string().regex(/^#[0-9A-Fa-f]{6}$/).optional().nullable(),
 });
 

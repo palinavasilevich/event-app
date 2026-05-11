@@ -20,7 +20,7 @@ type EventDetailsCardProps = {
   isJoined: boolean;
   isFavorite: boolean;
   isMutationLoading: boolean;
-  eventsError: string | null;
+  mutationError: string | null;
   onJoin: () => void;
   onLeave: () => void;
   onRemove: () => void;
@@ -34,7 +34,7 @@ export function EventDetailsCard({
   isJoined,
   isFavorite,
   isMutationLoading,
-  eventsError,
+  mutationError,
   onJoin,
   onLeave,
   onRemove,
@@ -43,7 +43,7 @@ export function EventDetailsCard({
 }: EventDetailsCardProps) {
   return (
     <>
-      {eventsError && <p className="text-sm text-destructive">{eventsError}</p>}
+      {mutationError && <p className="text-sm text-destructive">{mutationError}</p>}
 
       <Card
         style={

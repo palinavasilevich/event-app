@@ -19,6 +19,7 @@ export function MyEventsPage() {
   const isEventsLoading = useEventsStore((state) => state.isEventsLoading);
   const isJoinedLoading = useEventsStore((state) => state.isJoinedLoading);
   const eventsError = useEventsStore((state) => state.eventsError);
+  const mutationError = useEventsStore((state) => state.mutationError);
   const mutatingEventId = useEventsStore((state) => state.mutatingEventId);
   const removeEvent = useEventsStore((state) => state.removeEvent);
   const leaveEvent = useEventsStore((state) => state.leaveEvent);
@@ -71,6 +72,7 @@ export function MyEventsPage() {
         </div>
 
         {eventsError && <p>Loading error: {eventsError}</p>}
+        {mutationError && <p className="text-sm text-destructive">{mutationError}</p>}
 
         <Tabs
           value={myEventsFilter}

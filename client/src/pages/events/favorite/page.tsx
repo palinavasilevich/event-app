@@ -10,6 +10,7 @@ export function FavoriteEventsPage() {
     (state) => state.isFavoritesLoading,
   );
   const eventsError = useEventsStore((state) => state.eventsError);
+  const mutationError = useEventsStore((state) => state.mutationError);
   const mutatingEventId = useEventsStore((state) => state.mutatingEventId);
   const loadFavoriteEvents = useEventsStore(
     (state) => state.loadFavoriteEvents,
@@ -32,6 +33,7 @@ export function FavoriteEventsPage() {
     <PageShell title="Favorite Events">
       <div className="overflow-hidden rounded-lg border flex w-full max-w-6xl flex-col gap-6">
         {eventsError && <p>Loading error: {eventsError}</p>}
+        {mutationError && <p className="text-sm text-destructive">{mutationError}</p>}
 
         {isFavoritesLoading ? (
           <Spinner className="size-10" />

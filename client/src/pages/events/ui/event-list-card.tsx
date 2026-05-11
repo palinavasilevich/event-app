@@ -62,6 +62,7 @@ export function EventListCard({
             size="sm"
             disabled={isMutating}
             onClick={onToggleFavorite}
+            className="cursor-pointer"
           >
             <Heart className={isFavorite ? "fill-current" : ""} />
           </Button>

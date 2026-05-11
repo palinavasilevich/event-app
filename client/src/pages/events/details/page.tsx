@@ -21,8 +21,9 @@ export function EventDetailsPage() {
   const addFavorite = useEventsStore((state) => state.addFavorite);
   const removeFavorite = useEventsStore((state) => state.removeFavorite);
   const isMutationLoading = useEventsStore((state) => state.isMutationLoading);
-  const eventsError = useEventsStore((state) => state.eventsError);
+  const mutationError = useEventsStore((state) => state.mutationError);
   const clearError = useEventsStore((state) => state.clearError);
+  const clearMutationError = useEventsStore((state) => state.clearMutationError);
   const loadJoinedEvents = useEventsStore((state) => state.loadJoinedEvents);
   const loadFavoriteEvents = useEventsStore(
     (state) => state.loadFavoriteEvents,
@@ -30,8 +31,9 @@ export function EventDetailsPage() {
 
   useEffect(() => {
     clearError();
+    clearMutationError();
     loadFavoriteEvents().catch(() => {});
-  }, [clearError, loadFavoriteEvents]);
+  }, [clearError, clearMutationError, loadFavoriteEvents]);
 
   // fetchJoinedEvents: true syncs joined-events store alongside loading the event
   const { event, isLoading, isNotFound, loadError, reload } = useEventById(id, {
@@ -103,9 +105,9 @@ export function EventDetailsPage() {
 
   const handleFavorite = async () => {
     try {
-      await addFavorite(event.id);
+      await addFavorite(event.id, event);
     } catch {
-      // Errors from mutations are handled via eventsError in the store
+      // Errors from mutations are handled via mutationError in the store
     }
   };
 
@@ -129,7 +131,7 @@ export function EventDetailsPage() {
           isOwner={isOwner}
           isFavorite={isFavorite}
           isMutationLoading={isMutationLoading}
-          eventsError={eventsError}
+          mutationError={mutationError}
           onLeave={handleLeaveEvent}
           onJoin={handleJoinEvent}
           onRemove={handleRemoveEvent}

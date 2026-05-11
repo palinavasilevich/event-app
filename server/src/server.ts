@@ -1,6 +1,7 @@
 import fastify from "fastify";
 import fastifyJwt from "@fastify/jwt";
 import cors from "@fastify/cors";
+import rateLimit from "@fastify/rate-limit";
 import "dotenv/config";
 import "reflect-metadata";
 import { validateEnv, env } from "@/config/env";
@@ -24,9 +25,16 @@ async function start() {
     validateEnv();
 
     await app.register(cors, {
-      origin: true,
+      origin: env.corsOrigin
+        ? env.corsOrigin.split(",").map((s) => s.trim())
+        : env.nodeEnv !== "production",
       methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
       allowedHeaders: ["Content-Type", "Authorization"],
+    });
+
+    await app.register(rateLimit, {
+      max: 100,
+      timeWindow: "1 minute",
     });
 
     await app.register(fastifyJwt, {

@@ -4,6 +4,8 @@ import { Event } from "@/db/entities/event.entity";
 import { User } from "@/db/entities/user.entity";
 import { FastifyPluginAsync } from "fastify";
 
+type FavoriteParams = { id: string };
+
 export const meRoutes: FastifyPluginAsync = async (app) => {
   const participantsRepository = AppDataSource.getRepository(EventParticipant);
   const userRepository = AppDataSource.getRepository(User);
@@ -41,11 +43,11 @@ export const meRoutes: FastifyPluginAsync = async (app) => {
     },
   );
 
-  app.post(
+  app.post<{ Params: FavoriteParams }>(
     "/events/favorites/:id",
     { preHandler: [app.authenticate] },
     async (request, reply) => {
-      const { id } = request.params as { id: string };
+      const { id } = request.params;
 
       const [user, event] = await Promise.all([
         userRepository.findOne({
@@ -69,11 +71,11 @@ export const meRoutes: FastifyPluginAsync = async (app) => {
     },
   );
 
-  app.delete(
+  app.delete<{ Params: FavoriteParams }>(
     "/events/favorites/:id",
     { preHandler: [app.authenticate] },
     async (request, reply) => {
-      const { id } = request.params as { id: string };
+      const { id } = request.params;
 
       const user = await userRepository.findOne({
         where: { id: request.user.sub },

@@ -26,7 +26,9 @@ const eventFilterSchema = z
   })
   .refine(
     (data) =>
-      !data.startDate || !data.endDate || data.endDate >= data.startDate,
+      !data.startDate ||
+      !data.endDate ||
+      new Date(data.endDate) >= new Date(data.startDate),
     { message: "End date must be on or after start date", path: ["endDate"] },
   );
 
@@ -75,7 +77,7 @@ export function EventFilterForm({
 
   useEffect(() => {
     onSubmitRef.current = onSubmit;
-  });
+  }, [onSubmit]);
 
   useEffect(() => {
     const { search, startDate, endDate } = form.getValues();
@@ -118,8 +120,11 @@ export function EventFilterForm({
   const handleClear = () => {
     clearTimeout(timerRef.current);
     form.reset();
-    const { startDate, endDate } = form.getValues();
-    onSubmit({ startDate, endDate });
+    onSubmit({
+      startDate: format(new Date(), "yyyy-MM-dd"),
+      endDate: undefined,
+      search: undefined,
+    });
   };
 
   return (

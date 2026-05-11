@@ -19,7 +19,6 @@ type AuthState = {
   register: (payload: AuthRegisterRequest) => Promise<void>;
   logout: () => void;
   clearAuthError: () => void;
-  fetchMe: () => Promise<void>;
 };
 
 export const useAuthStore = create<AuthState>((set, get) => ({
@@ -88,20 +87,5 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
   clearAuthError: () => {
     set({ authError: null });
-  },
-  fetchMe: async () => {
-    if (!getAuthToken()) {
-      set({ user: null });
-      return;
-    }
-
-    try {
-      const { id, email, name } = await authApi.me();
-      set({ user: { id, email, name } });
-    } catch (error) {
-      console.error(error);
-      setAuthToken(null);
-      set({ user: null });
-    }
   },
 }));

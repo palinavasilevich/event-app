@@ -23,7 +23,9 @@ type EventsState = {
   isMutationLoading: boolean;
   mutatingEventId: string | null;
   eventsError: string | null;
+  mutationError: string | null;
   clearError: () => void;
+  clearMutationError: () => void;
   setMyEventsFilter: (filter: MyEventsFilter) => void;
   loadEvents: (params?: EventsQueryParams) => Promise<void>;
   createEvent: (payload: CreateEventRequest) => Promise<EventDto>;
@@ -33,11 +35,11 @@ type EventsState = {
   joinEvent: (id: string) => Promise<void>;
   leaveEvent: (id: string) => Promise<void>;
   loadFavoriteEvents: () => Promise<void>;
-  addFavorite: (id: string) => Promise<void>;
+  addFavorite: (id: string, event?: EventDto) => Promise<void>;
   removeFavorite: (id: string) => Promise<void>;
 };
 
-export const useEventsStore = create<EventsState>((set, get) => ({
+export const useEventsStore = create<EventsState>((set) => ({
   events: [],
   joinedEvents: [],
   favoriteEvents: [],
@@ -48,7 +50,9 @@ export const useEventsStore = create<EventsState>((set, get) => ({
   isMutationLoading: false,
   mutatingEventId: null,
   eventsError: null,
+  mutationError: null,
   clearError: () => set({ eventsError: null }),
+  clearMutationError: () => set({ mutationError: null }),
   setMyEventsFilter: (filter) => set({ myEventsFilter: filter }),
   loadEvents: async (params) => {
     set({ isEventsLoading: true, eventsError: null });
@@ -66,7 +70,7 @@ export const useEventsStore = create<EventsState>((set, get) => ({
   },
 
   createEvent: async (payload) => {
-    set({ isMutationLoading: true, eventsError: null });
+    set({ isMutationLoading: true, mutationError: null });
 
     try {
       const createdEvent = await eventsApi.createNewEvent(payload);
@@ -82,14 +86,14 @@ export const useEventsStore = create<EventsState>((set, get) => ({
     } catch (error) {
       set({
         isMutationLoading: false,
-        eventsError: getApiErrorMessage(error, "Failed to create event"),
+        mutationError: getApiErrorMessage(error, "Failed to create event"),
       });
 
       throw error;
     }
   },
   updateEvent: async (id, payload) => {
-    set({ isMutationLoading: true, eventsError: null });
+    set({ isMutationLoading: true, mutationError: null });
 
     try {
       const updatedEvent = await eventsApi.updateEvent(id, payload);
@@ -110,14 +114,14 @@ export const useEventsStore = create<EventsState>((set, get) => ({
     } catch (error) {
       set({
         isMutationLoading: false,
-        eventsError: getApiErrorMessage(error, "Failed to update event"),
+        mutationError: getApiErrorMessage(error, "Failed to update event"),
       });
 
       throw error;
     }
   },
   removeEvent: async (id) => {
-    set({ isMutationLoading: true, mutatingEventId: id, eventsError: null });
+    set({ isMutationLoading: true, mutatingEventId: id, mutationError: null });
 
     try {
       await eventsApi.removeEvent(id);
@@ -134,7 +138,7 @@ export const useEventsStore = create<EventsState>((set, get) => ({
       set({
         isMutationLoading: false,
         mutatingEventId: null,
-        eventsError: getApiErrorMessage(error, "Failed to delete event"),
+        mutationError: getApiErrorMessage(error, "Failed to delete event"),
       });
 
       throw error;
@@ -155,25 +159,38 @@ export const useEventsStore = create<EventsState>((set, get) => ({
     }
   },
   joinEvent: async (id) => {
-    set({ isMutationLoading: true, mutatingEventId: id, eventsError: null });
+    set({ isMutationLoading: true, mutatingEventId: id, mutationError: null });
 
     try {
       await eventsApi.joinEvent(id);
-      await get().loadJoinedEvents();
 
-      set({ isMutationLoading: false, mutatingEventId: null });
+      set((state) => {
+        const event = state.events.find((e) => e.id === id);
+        return {
+          ...(event
+            ? {
+                joinedEvents: [
+                  { joinedAt: new Date().toISOString(), event },
+                  ...state.joinedEvents,
+                ],
+              }
+            : {}),
+          isMutationLoading: false,
+          mutatingEventId: null,
+        };
+      });
     } catch (error) {
       set({
         isMutationLoading: false,
         mutatingEventId: null,
-        eventsError: getApiErrorMessage(error, "Failed to join to event"),
+        mutationError: getApiErrorMessage(error, "Failed to join to event"),
       });
 
       throw error;
     }
   },
   leaveEvent: async (id) => {
-    set({ isMutationLoading: true, mutatingEventId: id, eventsError: null });
+    set({ isMutationLoading: true, mutatingEventId: id, mutationError: null });
 
     try {
       await eventsApi.leaveEvent(id);
@@ -189,7 +206,7 @@ export const useEventsStore = create<EventsState>((set, get) => ({
       set({
         isMutationLoading: false,
         mutatingEventId: null,
-        eventsError: getApiErrorMessage(error, "Failed to leave event"),
+        mutationError: getApiErrorMessage(error, "Failed to leave event"),
       });
 
       throw error;
@@ -214,25 +231,34 @@ export const useEventsStore = create<EventsState>((set, get) => ({
     }
   },
 
-  addFavorite: async (id) => {
-    set({ isMutationLoading: true, mutatingEventId: id, eventsError: null });
+  addFavorite: async (id, event?) => {
+    set({ isMutationLoading: true, mutatingEventId: id, mutationError: null });
 
     try {
       await meApi.addFavorite(id);
-      await get().loadFavoriteEvents();
-      set({ isMutationLoading: false, mutatingEventId: null });
+
+      set((state) => {
+        const eventToAdd = event ?? state.events.find((e) => e.id === id);
+        return {
+          ...(eventToAdd
+            ? { favoriteEvents: [...state.favoriteEvents, eventToAdd] }
+            : {}),
+          isMutationLoading: false,
+          mutatingEventId: null,
+        };
+      });
     } catch (error) {
       set({
         isMutationLoading: false,
         mutatingEventId: null,
-        eventsError: getApiErrorMessage(error, "Failed to add favorite"),
+        mutationError: getApiErrorMessage(error, "Failed to add favorite"),
       });
       throw error;
     }
   },
 
   removeFavorite: async (id) => {
-    set({ isMutationLoading: true, mutatingEventId: id, eventsError: null });
+    set({ isMutationLoading: true, mutatingEventId: id, mutationError: null });
 
     try {
       await meApi.removeFavorite(id);
@@ -245,7 +271,7 @@ export const useEventsStore = create<EventsState>((set, get) => ({
       set({
         isMutationLoading: false,
         mutatingEventId: null,
-        eventsError: getApiErrorMessage(error, "Failed to remove favorite"),
+        mutationError: getApiErrorMessage(error, "Failed to remove favorite"),
       });
       throw error;
     }

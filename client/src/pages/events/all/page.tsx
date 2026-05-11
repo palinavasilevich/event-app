@@ -32,10 +32,11 @@ export function EventsAllPage() {
       if (favoriteIds.has(eventId)) {
         await removeFavorite(eventId);
       } else {
-        await addFavorite(eventId);
+        const event = events.find((e) => e.id === eventId);
+        await addFavorite(eventId, event);
       }
     } catch {
-      // Errors handled via eventsError in the store
+      // Errors handled via mutationError in the store
     }
   };
 

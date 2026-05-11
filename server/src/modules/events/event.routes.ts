@@ -61,8 +61,9 @@ export const eventRoutes: FastifyPluginAsync = async (app) => {
       }
 
       if (search) {
+        const escaped = search.replace(/[%_\\]/g, "\\$&");
         query.andWhere("LOWER(event.title) LIKE LOWER(:search)", {
-          search: `%${search}%`,
+          search: `%${escaped}%`,
         });
       }
 
