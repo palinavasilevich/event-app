@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { addDays } from "date-fns";
 import { type DateRange } from "react-day-picker";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
@@ -15,10 +14,7 @@ export function CalendarRange({
   value,
   onChange,
 }: CalendarRangeProps) {
-  const [internalRange, setInternalRange] = useState<DateRange | undefined>({
-    from: new Date(new Date().getFullYear(), 0, 12),
-    to: addDays(new Date(new Date().getFullYear(), 0, 12), 30),
-  });
+  const [internalRange, setInternalRange] = useState<DateRange | undefined>(undefined);
 
   const dateRange = value !== undefined ? value : internalRange;
   const handleSelect = onChange ?? setInternalRange;

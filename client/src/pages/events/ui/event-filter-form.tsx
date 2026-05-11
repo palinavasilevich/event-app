@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import type { EventsQueryParams } from "@/shared/api/events/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
 import { Calendar, SearchIcon, XIcon } from "lucide-react";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
@@ -70,6 +70,7 @@ export function EventFilterForm({
     control: form.control,
     name: "startDate",
   });
+
   const watchedEndDate = useWatch({ control: form.control, name: "endDate" });
 
   const onSubmitRef = useRef(onSubmit);
@@ -117,14 +118,17 @@ export function EventFilterForm({
     [form],
   );
 
+  useEffect(() => () => clearTimeout(timerRef.current), []);
+
   const handleClear = () => {
     clearTimeout(timerRef.current);
     form.reset();
-    onSubmit({
+    onSubmitRef.current({
       startDate: format(new Date(), "yyyy-MM-dd"),
       endDate: undefined,
       search: undefined,
     });
+    setShowCalendar(false);
   };
 
   return (
@@ -174,7 +178,7 @@ export function EventFilterForm({
           </ButtonGroup>
         )}
       />
-      <div ref={calendarRef} className="relative">
+      <div ref={calendarRef} className="relative flex gap-2">
         <Button
           variant="outline"
           type="button"
@@ -183,25 +187,44 @@ export function EventFilterForm({
         >
           <Calendar />
         </Button>
+
         {isShowCalendar && (
           <CalendarRange
             className="absolute right-0 top-9 z-10"
             value={{
-              from: watchedStartDate ? new Date(watchedStartDate) : undefined,
-              to: watchedEndDate ? new Date(watchedEndDate) : undefined,
+              from: watchedStartDate ? parseISO(watchedStartDate) : undefined,
+              to: watchedEndDate ? parseISO(watchedEndDate) : undefined,
             }}
             onChange={(range) => {
               form.setValue(
                 "startDate",
                 range?.from ? format(range.from, "yyyy-MM-dd") : "",
+                { shouldValidate: true },
               );
               form.setValue(
                 "endDate",
                 range?.to ? format(range.to, "yyyy-MM-dd") : "",
+                { shouldValidate: true },
               );
-              scheduleSubmit();
+              if (range?.to && !watchedEndDate) {
+                setShowCalendar(false);
+                handleSubmit();
+              } else {
+                scheduleSubmit();
+              }
             }}
           />
+        )}
+        {watchedEndDate && (
+          <Button
+            variant="outline"
+            type="button"
+            aria-label="Clear filter"
+            onClick={handleClear}
+            disabled={isLoading}
+          >
+            <XIcon /> Clear filter
+          </Button>
         )}
       </div>
     </form>
